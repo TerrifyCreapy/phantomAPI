@@ -1,11 +1,25 @@
 import { NestFactory } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
 
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: false });
+
+  const config = app.get(ConfigService);
+
+  const prefix = config.get<string>('API_PREFIX');
+  const v = config.get<string>('API_VERSION');
+
+  app.setGlobalPrefix(`${prefix}/${v}`);
+
+  
+
+  const port: number = config.get<number>('port');
+
+  app.enableCors({ credentials: true, origin: true });
 
   const cfg = new DocumentBuilder()
     .setTitle('BaumanAPI documentation')
@@ -18,6 +32,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, cfg);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(7000);
+  await app.listen(port || 7000);
 }
 bootstrap();
