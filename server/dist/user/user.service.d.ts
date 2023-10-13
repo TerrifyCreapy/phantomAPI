@@ -7,5 +7,8 @@ export declare class UserService {
     constructor(pg: Client);
     findByEmail(email: string): Promise<IUser | null>;
     findAll(page?: number, limit?: number): Promise<IGetAllUsers>;
-    createUser(user: CreateUserDto): Promise<IUser | string>;
+    createUser(user: CreateUserDto, refresh: string): Promise<{
+        email: string;
+    } | string>;
+    refreshToken(email: string, refresh: string): Promise<boolean>;
 }

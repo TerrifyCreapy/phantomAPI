@@ -28,9 +28,14 @@ async function bootstrap() {
     )
     .setVersion('0.0.1')
     .addTag('Backend')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, cfg);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    }
+  });
 
   await app.listen(port || 7000);
 }

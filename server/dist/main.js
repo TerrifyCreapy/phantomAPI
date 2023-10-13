@@ -17,9 +17,14 @@ async function bootstrap() {
         .setDescription('Данный сервис был разработан, как дипломный проект для кафедры ИУК5')
         .setVersion('0.0.1')
         .addTag('Backend')
+        .addBearerAuth()
         .build();
     const document = swagger_1.SwaggerModule.createDocument(app, cfg);
-    swagger_1.SwaggerModule.setup('api', app, document);
+    swagger_1.SwaggerModule.setup('api', app, document, {
+        swaggerOptions: {
+            persistAuthorization: true,
+        }
+    });
     await app.listen(port || 7000);
 }
 bootstrap();

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectClient } from 'nest-postgres';
 import { Client } from 'pg';
 import * as bcrypt from "bcrypt";
@@ -31,27 +31,38 @@ export class UserService {
     return {rows: users.rows, count: totalCount};
   }
 
-  public async createUser(user: CreateUserDto): Promise<IUser | string> {
-    
-    let {email, password} = user;
+  public async createUser(user: CreateUserDto, refresh: string): Promise<{email: string} | string> {
+    try {
+      let {email, password} = user;
 
-    const exists = this.findByEmail(email);
+      const queryString = "INSERT INTO users(email, password, refresh) values($1, $2, $3) RETURNING *";
 
-    if(exists) return "User already exists";
+      const saultCount = 10;
+      const hash = await bcrypt.hash(password, saultCount);
 
+      console.log(hash);
 
-    
-    const saultCount = 10;
-    password = await bcrypt.hash(password, saultCount);
-
-
-    const token = "awdfawdf";
-    const queryString = "INSERT INTO users(email, password, refresh) values($1, $2, $3) RETURNING *";
-
-    const userDB: IUser = (await this.pg.query(queryString, [email, password, token])).rows[0];
+      const userDB: IUser = (await this.pg.query(queryString, [email, hash, refresh])).rows[0];
 
 
-    return userDB;
+      return {email};
+    }
+    catch(e: any) {
+      console.error(e);
+      throw new ForbiddenException("Error with registration");
+    }
+  }
+
+  public async refreshToken(email: string, refresh: string): Promise<boolean> {
+    try {
+      const queryString = `UPDATE users SET refresh='${refresh}' WHERE email='${email}'`;
+      await this.pg.query(queryString);
+      return true;
+    }
+    catch(e) {
+      console.error(e);
+      throw new ForbiddenException("Error with login");
+    }
   }
 
 }

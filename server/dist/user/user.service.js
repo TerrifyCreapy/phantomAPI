@@ -38,17 +38,31 @@ let UserService = class UserService {
         const users = await this.pg.query(queryString);
         return { rows: users.rows, count: totalCount };
     }
-    async createUser(user) {
-        let { email, password } = user;
-        const exists = this.findByEmail(email);
-        if (exists)
-            return "User already exists";
-        const saultCount = 10;
-        password = await bcrypt.hash(password, saultCount);
-        const token = "awdfawdf";
-        const queryString = "INSERT INTO users(email, password, refresh) values($1, $2, $3) RETURNING *";
-        const userDB = (await this.pg.query(queryString, [email, password, token])).rows[0];
-        return userDB;
+    async createUser(user, refresh) {
+        try {
+            let { email, password } = user;
+            const queryString = "INSERT INTO users(email, password, refresh) values($1, $2, $3) RETURNING *";
+            const saultCount = 10;
+            const hash = await bcrypt.hash(password, saultCount);
+            console.log(hash);
+            const userDB = (await this.pg.query(queryString, [email, hash, refresh])).rows[0];
+            return { email };
+        }
+        catch (e) {
+            console.error(e);
+            throw new common_1.ForbiddenException("Error with registration");
+        }
+    }
+    async refreshToken(email, refresh) {
+        try {
+            const queryString = `UPDATE users SET refresh='${refresh}' WHERE email='${email}'`;
+            await this.pg.query(queryString);
+            return true;
+        }
+        catch (e) {
+            console.error(e);
+            throw new common_1.ForbiddenException("Error with login");
+        }
     }
 };
 UserService = __decorate([

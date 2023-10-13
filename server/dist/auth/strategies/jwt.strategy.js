@@ -8,35 +8,31 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserController = void 0;
+exports.JwtStrategy = void 0;
+const passport_jwt_1 = require("passport-jwt");
+const passport_1 = require("@nestjs/passport");
 const common_1 = require("@nestjs/common");
-const user_service_1 = require("./user.service");
-const swagger_1 = require("@nestjs/swagger");
-const Pagination_dto_1 = require("./dto/Pagination.dto");
-let UserController = class UserController {
+const user_service_1 = require("../../user/user.service");
+let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy, 'theJwt') {
     constructor(userService) {
+        super({
+            jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
+            ignoreExpiration: false,
+            secretOrKey: process.env.JWT_SK_ACCESS
+        });
         this.userService = userService;
     }
-    async getAllUsers(params) {
-        const { limit, page } = params;
-        return await this.userService.findAll(page, limit);
+    async validate(payload) {
+        const user = await this.userService.findByEmail(payload.email);
+        if (!user)
+            throw new common_1.ForbiddenException("У вас нет доступа!");
+        return user.email;
     }
 };
-__decorate([
-    (0, common_1.Get)(),
-    (0, swagger_1.ApiQuery)({ type: Pagination_dto_1.PaginationDto }),
-    __param(0, (0, common_1.Query)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], UserController.prototype, "getAllUsers", null);
-UserController = __decorate([
-    (0, common_1.Controller)('users'),
+JwtStrategy = __decorate([
+    (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [user_service_1.UserService])
-], UserController);
-exports.UserController = UserController;
-//# sourceMappingURL=user.controller.js.map
+], JwtStrategy);
+exports.JwtStrategy = JwtStrategy;
+//# sourceMappingURL=jwt.strategy.js.map

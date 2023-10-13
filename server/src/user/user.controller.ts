@@ -17,17 +17,4 @@ export class UserController {
     return await this.userService.findAll(page, limit);
   }
 
-  
-  @Post("registration")
-  @HttpCode(201)
-  async regUser(@Body() user: CreateUserDto, @Res() response: Response) {
-    const result = await this.userService.createUser(user);
-
-    if(typeof result === "string") {
-      return response.status(409).json({message: result});
-    }
-
-
-    return result;
-  }
 }
