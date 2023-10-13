@@ -8,13 +8,35 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
+const config_1 = require("@nestjs/config");
+const nest_postgres_1 = require("nest-postgres");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
+const user_module_1 = require("./user/user.module");
+const project_module_1 = require("./project/project.module");
+const auth_module_1 = require("./auth/auth.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [],
+        imports: [
+            config_1.ConfigModule.forRoot({
+                isGlobal: true,
+                envFilePath: ['.env'],
+            }),
+            nest_postgres_1.PostgresModule.forRootAsync({
+                useFactory: () => ({
+                    host: process.env.DB_HOST,
+                    database: process.env.DB_NAME,
+                    password: process.env.DB_PASSWORD,
+                    user: process.env.DB_USER,
+                    port: +process.env.DB_PORT || 5432,
+                }),
+            }),
+            user_module_1.UserModule,
+            project_module_1.ProjectModule,
+            auth_module_1.AuthModule,
+        ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })
