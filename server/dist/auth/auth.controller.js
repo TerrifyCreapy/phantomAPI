@@ -55,6 +55,7 @@ __decorate([
 ], AuthController.prototype, "register", null);
 AuthController = __decorate([
     (0, common_1.Controller)('auth'),
+    (0, swagger_1.ApiTags)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService, user_service_1.UserService])
 ], AuthController);
 exports.AuthController = AuthController;

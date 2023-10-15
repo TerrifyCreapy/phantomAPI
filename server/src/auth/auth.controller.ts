@@ -2,12 +2,13 @@ import { Controller, UseGuards, Post, Body, Req, ForbiddenException } from '@nes
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { UserService } from 'src/user/user.service';
 import { LocalAuthGuard } from './guards/local.guard';
 import { LocalStrategy } from './strategies/local.strategy';
 
 @Controller('auth')
+@ApiTags('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService, private userService: UserService) {}
 

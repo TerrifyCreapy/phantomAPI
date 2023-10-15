@@ -10,12 +10,16 @@ exports.ProjectModule = void 0;
 const common_1 = require("@nestjs/common");
 const project_service_1 = require("./project.service");
 const project_controller_1 = require("./project.controller");
+const entity_module_1 = require("../entity/entity.module");
 let ProjectModule = class ProjectModule {
 };
 ProjectModule = __decorate([
     (0, common_1.Module)({
+        imports: [
+            entity_module_1.EntityModule,
+        ],
         controllers: [project_controller_1.ProjectController],
-        providers: [project_service_1.ProjectService]
+        providers: [project_service_1.ProjectService],
     })
 ], ProjectModule);
 exports.ProjectModule = ProjectModule;

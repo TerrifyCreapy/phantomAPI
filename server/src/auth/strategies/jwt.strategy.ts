@@ -16,6 +16,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'theJwt') {
     async validate(payload: any) {
         const user = await this.userService.findByEmail(payload.email);
         if(!user) throw new ForbiddenException("У вас нет доступа!");
-        return user.email;
+        return {
+            email: user.email,
+        };
     }
 }
