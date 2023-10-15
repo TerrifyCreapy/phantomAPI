@@ -1,0 +1,14 @@
+create table projects(
+    link VARCHAR(255) NOT NULL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
+    auth Boolean NOT NULL DEFAULT false,
+    register Boolean NOT NULL DEFAULT false,
+    uploads Boolean NOT NULL DEFAULT false,
+    userEmail VARCHAR(255) NOT NULL references users(email));
+
+create table entities(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    value JSON,
+    projectLink VARCHAR(255) NOT NULL references projects(link));
