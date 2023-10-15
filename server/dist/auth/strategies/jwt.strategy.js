@@ -27,7 +27,9 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
         const user = await this.userService.findByEmail(payload.email);
         if (!user)
             throw new common_1.ForbiddenException("У вас нет доступа!");
-        return user.email;
+        return {
+            email: user.email,
+        };
     }
 };
 JwtStrategy = __decorate([
