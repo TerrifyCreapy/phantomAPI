@@ -9,27 +9,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateProjectDto = void 0;
+exports.UpdateEntityDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
-class UpdateProjectDto {
+const create_entity_dto_1 = require("./create-entity.dto");
+class UpdateEntityDto extends (0, swagger_1.PartialType)(create_entity_dto_1.CreateEntityDto) {
 }
 __decorate([
     (0, swagger_1.ApiProperty)({
-        default: true
+        default: []
     }),
-    __metadata("design:type", Boolean)
-], UpdateProjectDto.prototype, "auth", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({
-        default: true
-    }),
-    __metadata("design:type", Boolean)
-], UpdateProjectDto.prototype, "register", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({
-        default: true
-    }),
-    __metadata("design:type", Boolean)
-], UpdateProjectDto.prototype, "uploads", void 0);
-exports.UpdateProjectDto = UpdateProjectDto;
-//# sourceMappingURL=update-project.dto.js.map
+    __metadata("design:type", Object)
+], UpdateEntityDto.prototype, "value", void 0);
+exports.UpdateEntityDto = UpdateEntityDto;
+//# sourceMappingURL=update-entity.dto.js.map

@@ -1,7 +1,6 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { CreateProjectDto } from './create-project.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateProjectDto extends PartialType(CreateProjectDto) {
+export class UpdateProjectDto {
     @ApiProperty({
         default: true
     })

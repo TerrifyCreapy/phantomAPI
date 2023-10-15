@@ -32,8 +32,13 @@ export class ProjectController {
   }
 
   @Patch(':link')
-  async update(@Param('link') link: string, updateDto: UpdateProjectDto) {
+  async update(@Param('link') link: string, updateDto: CreateProjectDto) {
     return(await this.projectService.update(link, updateDto))
+  }
+
+  @Patch('features/:link')
+  async updateFeatures(@Param('link') link: string, @Body() updateProjectDto: UpdateProjectDto) {
+    return (await this.projectService.updateFeatures(link ,updateProjectDto));
   }
 
   @Delete(':link')

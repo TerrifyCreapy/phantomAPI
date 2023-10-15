@@ -36,6 +36,9 @@ let ProjectController = class ProjectController {
     async update(link, updateDto) {
         return (await this.projectService.update(link, updateDto));
     }
+    async updateFeatures(link, updateProjectDto) {
+        return (await this.projectService.updateFeatures(link, updateProjectDto));
+    }
     async remove(link) {
         return (await this.projectService.remove(link));
     }
@@ -67,9 +70,17 @@ __decorate([
     (0, common_1.Patch)(':link'),
     __param(0, (0, common_1.Param)('link')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_project_dto_1.UpdateProjectDto]),
+    __metadata("design:paramtypes", [String, create_project_dto_1.CreateProjectDto]),
     __metadata("design:returntype", Promise)
 ], ProjectController.prototype, "update", null);
+__decorate([
+    (0, common_1.Patch)('features/:link'),
+    __param(0, (0, common_1.Param)('link')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, update_project_dto_1.UpdateProjectDto]),
+    __metadata("design:returntype", Promise)
+], ProjectController.prototype, "updateFeatures", null);
 __decorate([
     (0, common_1.Delete)(':link'),
     __param(0, (0, common_1.Param)('link')),

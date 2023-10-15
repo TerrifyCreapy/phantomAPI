@@ -18,17 +18,24 @@ const common_1 = require("@nestjs/common");
 const pg_1 = require("pg");
 const nest_postgres_1 = require("nest-postgres");
 const uid = require("uuid");
+const entity_service_1 = require("../entity/entity.service");
 let ProjectService = class ProjectService {
-    constructor(pg) {
+    constructor(pg, entityService) {
         this.pg = pg;
+        this.entityService = entityService;
     }
     async findAll(email) {
-        const query = `SELECT * FROM projects where "userEmail"='${email}'`;
-        const result = await this.pg.query(query);
-        return {
-            rows: result.rows,
-            count: result.rows.length,
-        };
+        try {
+            const query = `SELECT * FROM projects where "useremail"='${email}'`;
+            const result = await this.pg.query(query);
+            return {
+                rows: result.rows,
+                count: result.rows.length,
+            };
+        }
+        catch (e) {
+            throw new common_1.BadRequestException("Error");
+        }
     }
     async findOne(link) {
         const query = `SELECT * FROM projects where "link"='${link}'`;
@@ -45,10 +52,47 @@ let ProjectService = class ProjectService {
         return Object.assign({}, result);
     }
     async update(link, updateProjectDto) {
-        const { name, description, auth, register, uploads } = updateProjectDto;
-        const query = `UPDATE projects SET name='${name}', description='${description}', auth='${auth}', register='${register}', uploads='${uploads}' where link='${link}' RETURNING link, name, description, auth, register, uploads`;
+        const { name, description } = updateProjectDto;
+        const query = `UPDATE projects SET name='${name}', description='${description}' where link='${link}' RETURNING link, name, description, auth, register, uploads`;
         const result = (await this.pg.query(query)).rows[0];
         return Object.assign({}, result);
+    }
+    async updateFeatures(link, updateFeatures) {
+        try {
+            const { auth, register, uploads } = updateFeatures;
+            const project = await this.findOne(link);
+            if (project.auth === auth && project.register === register && project.uploads === uploads)
+                return project;
+            if (!project)
+                throw new Error("Project not found");
+            const uploadsEntity = await this.entityService.findOne(-1, link, "uploads");
+            if (auth || register) {
+                const userEntity = await this.entityService.findOne(-1, link, "users");
+                console.log(userEntity);
+                if (!userEntity) {
+                    const cfg = {
+                        name: "users",
+                        link,
+                    };
+                    await this.entityService.create(cfg);
+                }
+            }
+            if (uploads) {
+                if (!uploadsEntity) {
+                    const cfg = {
+                        name: "uploads",
+                        link,
+                    };
+                    await this.entityService.create(cfg);
+                }
+            }
+            const query = `UPDATE projects SET "auth"=${auth}, "register"=${register}, "uploads"=${uploads} WHERE link='${link}' RETURNING *`;
+            const result = (await this.pg.query(query)).rows[0];
+            return Object.assign({}, result);
+        }
+        catch (e) {
+            throw new common_1.NotFoundException(e.message);
+        }
     }
     async remove(link) {
         const query = `DELETE FROM projects WHERE link='${link}'`;
@@ -61,7 +105,7 @@ let ProjectService = class ProjectService {
 ProjectService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, nest_postgres_1.InjectClient)()),
-    __metadata("design:paramtypes", [typeof (_a = typeof pg_1.Client !== "undefined" && pg_1.Client) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof pg_1.Client !== "undefined" && pg_1.Client) === "function" ? _a : Object, entity_service_1.EntityService])
 ], ProjectService);
 exports.ProjectService = ProjectService;
 //# sourceMappingURL=project.service.js.map

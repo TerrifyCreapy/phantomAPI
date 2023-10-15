@@ -11,6 +11,7 @@ export declare class ProjectController {
     }>;
     findOne(link: string): Promise<IProject | null>;
     createProject(dto: CreateProjectDto, email: string): Promise<any>;
-    update(link: string, updateDto: UpdateProjectDto): Promise<any>;
+    update(link: string, updateDto: CreateProjectDto): Promise<any>;
+    updateFeatures(link: string, updateProjectDto: UpdateProjectDto): Promise<any>;
     remove(link: string): Promise<boolean>;
 }
