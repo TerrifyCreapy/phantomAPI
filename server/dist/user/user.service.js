@@ -46,7 +46,7 @@ let UserService = class UserService {
             const hash = await bcrypt.hash(password, saultCount);
             console.log(hash);
             const userDB = (await this.pg.query(queryString, [email, hash, refresh])).rows[0];
-            return { email };
+            return { email: userDB.email };
         }
         catch (e) {
             console.error(e);

@@ -45,7 +45,7 @@ export class UserService {
       const userDB: IUser = (await this.pg.query(queryString, [email, hash, refresh])).rows[0];
 
 
-      return {email};
+      return {email: userDB.email};
     }
     catch(e: any) {
       console.error(e);
