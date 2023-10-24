@@ -34,7 +34,9 @@ export class ProjectService {
   async findOne(link: string): Promise<IProject> {
     const query = `SELECT * FROM projects where "link"='${link}'`;
     const result = await this.pg.query(query);
+    
     if(!result.rows.length) throw new BadRequestException("Unknown link");
+    
     return {...result.rows[0]};
   }
 

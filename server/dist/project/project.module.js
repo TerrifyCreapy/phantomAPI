@@ -20,6 +20,7 @@ ProjectModule = __decorate([
         ],
         controllers: [project_controller_1.ProjectController],
         providers: [project_service_1.ProjectService],
+        exports: [project_service_1.ProjectService]
     })
 ], ProjectModule);
 exports.ProjectModule = ProjectModule;

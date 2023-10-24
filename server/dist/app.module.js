@@ -16,6 +16,7 @@ const user_module_1 = require("./user/user.module");
 const project_module_1 = require("./project/project.module");
 const auth_module_1 = require("./auth/auth.module");
 const entity_module_1 = require("./entity/entity.module");
+const rest_endpoints_module_1 = require("./endpoints/rest-endpoints/rest-endpoints.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -38,6 +39,7 @@ AppModule = __decorate([
             project_module_1.ProjectModule,
             auth_module_1.AuthModule,
             entity_module_1.EntityModule,
+            rest_endpoints_module_1.RestEndpointsModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

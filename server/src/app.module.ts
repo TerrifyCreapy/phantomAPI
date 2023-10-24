@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { ProjectModule } from './project/project.module';
 import { AuthModule } from './auth/auth.module';
 import { EntityModule } from './entity/entity.module';
+import { RestEndpointsModule } from './endpoints/rest-endpoints/rest-endpoints.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { EntityModule } from './entity/entity.module';
     ProjectModule,
     AuthModule,
     EntityModule,
+    RestEndpointsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

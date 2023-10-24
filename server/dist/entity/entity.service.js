@@ -65,8 +65,9 @@ let EntityService = class EntityService {
             const isExist = (await this.pg.query(`SELECT * FROM entities where "projectlink"='${link}' and "name"='${name}'`)).rows.length;
             if (isExist)
                 throw new Error(Errors_constants_1.Errors.badRequestException);
-            const query = `INSERT INTO entities(name, value, "projectlink") values($1, $2, $3) RETURNING *`;
-            const result = (await this.pg.query(query, [name, '[]', link])).rows[0];
+            const query = `INSERT INTO entities(name, value, "projectlink", index) values($1, $2, $3, 1) RETURNING *`;
+            const result = (await this.pg.query(query, [name, '{}', link])).rows[0];
+            console.log(result);
             return Object.assign({}, result);
         }
         catch (e) {

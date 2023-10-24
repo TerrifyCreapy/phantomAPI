@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SubdomainMiddleware = void 0;
 const common_1 = require("@nestjs/common");
 let SubdomainMiddleware = class SubdomainMiddleware {
-    use(req, res, next) {
+    async use(req, res, next) {
         const hostname = req.hostname;
         const subdomain = hostname.split('.')[0];
         req.headers.subdomain = subdomain;

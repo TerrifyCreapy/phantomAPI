@@ -33,6 +33,7 @@
     "express-subdomain": "^1.0.5",
     "nest-postgres": "^0.0.9",
     "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.1.13",

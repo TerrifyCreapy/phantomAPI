@@ -62,15 +62,17 @@ export class EntityService {
       
 
       const project = (await this.pg.query(`SELECT * FROM projects where "link"='${link}'`)).rows;
+
       if(!project.length) throw new Error(Errors.notFoundException);
 
       const isExist = (await this.pg.query(`SELECT * FROM entities where "projectlink"='${link}' and "name"='${name}'`)).rows.length;
+      
       if(isExist) throw new Error(Errors.badRequestException);
 
-
-      const query = `INSERT INTO entities(name, value, "projectlink") values($1, $2, $3) RETURNING *`;
-      const result = (await this.pg.query(query, [name, '[]', link])).rows[0];
-
+  
+      const query = `INSERT INTO entities(name, value, "projectlink", index) values($1, $2, $3, 1) RETURNING *`;
+      const result = (await this.pg.query(query, [name, '{}', link])).rows[0];
+      console.log(result);
       return {...result};
 
     }

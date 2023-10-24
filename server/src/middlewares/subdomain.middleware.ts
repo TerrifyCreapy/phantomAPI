@@ -4,10 +4,14 @@ import { NextFunction, Request, Response } from "express";
 
 @Injectable()
 export class SubdomainMiddleware implements NestMiddleware {
-    use(req: Request, res: Response, next: NextFunction) {
+
+    async use(req: Request, res: Response, next: NextFunction) {
         const hostname = req.hostname;
         const subdomain = hostname.split('.')[0];
+
         req.headers.subdomain = subdomain;
         next();
+
+        
     }
 }
