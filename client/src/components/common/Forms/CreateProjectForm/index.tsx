@@ -42,13 +42,13 @@ const CreateProject: FC = () => {
     }
 
     return (
-        <form className={styles.control}>
+        <form className={styles.control} action="submit" onSubmit={onSubmit}>
             <h1 className={styles.control__title}>новый проект</h1>
             <Input placeholder="Введите название" className={styles.control__input} onBlur={touched} value={name} onChange={nameChange}/>
             {isError() && <span className={styles.control__error}>{error}</span>}
             <div className={styles.control__buttons}>
-                <Button type="submit" className={styles.control__button} disabled={(isTouched && error.length) || !name.length?true:false} onClick={onSubmit}>Создать</Button>
-                <Button className={styles.control__button} onClick={onCancel}>Отменить</Button>
+                <Button type="submit" className={styles.control__button} disabled={(isTouched && error.length) || !name.length?true:false} onClick={onSubmit} text="создать"/>
+                <Button className={styles.control__button} onClick={onCancel} text="отменить"/>
             </div>
         </form>
  )

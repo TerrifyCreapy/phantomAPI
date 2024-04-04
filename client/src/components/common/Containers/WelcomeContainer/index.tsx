@@ -5,8 +5,13 @@ import Container from "components/common/Container";
 import { Routes } from "constants/routes";
 
 import styles from "./WelcomeContainer.module.scss";
+import IUser from "interfaces/entities/IUser";
 
-const WelcomeContainer: FC = () => {
+type WelcomeContainerType = {
+    user: IUser | null;
+}
+
+const WelcomeContainer: FC<WelcomeContainerType> = ({user}) => {
     const isAuth = false;
 
     const buttonRef = useRef<HTMLAnchorElement>(null);
@@ -37,7 +42,7 @@ const WelcomeContainer: FC = () => {
                 <div className={styles.welcome__links}>
                     <ButtonLink
                         className={`${styles.welcome__link} ${styles.starting_anim} ${isAuth? "" : styles.welcome_auth}`}
-                        to={Routes.AUTH_PATH}
+                        to={user?Routes.PROJECTS_PATH:Routes.AUTH_PATH}
                         variant="gradient"
                         ref={buttonRef}
                     >

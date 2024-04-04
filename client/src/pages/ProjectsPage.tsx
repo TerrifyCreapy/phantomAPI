@@ -1,12 +1,16 @@
 import useAppSelector from "hooks/useAppSelector";
 import { Routes } from "constants/routes";
 import {Dispatch, FC, SetStateAction, createContext, useEffect, useState} from "react";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, useNavigate, useParams } from "react-router";
 import ControlPanel from "components/ControlPanel";
 import Container from "components/common/Container";
 import useAppDispatch from "hooks/useAppDispatch";
 import { createProject, fetchProjects } from "stores/reducers/Projects/ActionCreators";
 import IReduceProject from "interfaces/entities/IReducedProject";
+import Portal from "components/common/Portal";
+import Modal from "components/common/Modal";
+import CreateProject from "components/common/Forms/CreateProjectForm";
+import ProjectControl from "components/ProjectControl";
 
 type ProjectsContextType = {
     getProjects: () => unknown;
@@ -21,9 +25,11 @@ export const ProjectsContext = createContext<ProjectsContextType>({} as Projects
 
 const ProjectsPage: FC = () => {
 
+    const {id} = useParams();
+
     const {user, error, isLoading} = useAppSelector(state => state.userReducer);
     const navigate = useNavigate();
-    const {projects, maxEntities} = useAppSelector(state => state.projectsReducer);
+    const {projects, maxEntities, loaded} = useAppSelector(state => state.projectsReducer);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -36,6 +42,7 @@ const ProjectsPage: FC = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
 
     function getProjects() {
+        if(loaded) return;
         dispatch(fetchProjects());
     }
 
@@ -60,6 +67,11 @@ const ProjectsPage: FC = () => {
                 <ControlPanel/>
                 <Outlet/>
             </Container> 
+            <Portal id="root">
+                    <Modal isOpen={openModal} setOpen={setOpenModal}>
+                        {!id? <CreateProject/>:null}
+                    </Modal>
+            </Portal>
         </ProjectsContext.Provider>
         
     )

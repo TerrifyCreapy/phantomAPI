@@ -6,6 +6,7 @@ type InitialStateType = {
     projects: IReduceProject[];
     maxEntities: number;
     error: string;
+    loaded: boolean;
 }
 
 const initialState: InitialStateType = {
@@ -13,6 +14,7 @@ const initialState: InitialStateType = {
     projects: [],
     maxEntities: 0,
     error: "",
+    loaded: false,
 }
 
 export const projectSlice = createSlice({
@@ -20,6 +22,7 @@ export const projectSlice = createSlice({
     initialState,
     reducers: {
         setLoading(state, action: PayloadAction<boolean>) {
+            state.loaded = true;
             state.isLoading = action.payload;
         },
         createProjectSuccess(state, action: PayloadAction<IReduceProject>) {
