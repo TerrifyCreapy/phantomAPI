@@ -4,14 +4,16 @@ import styles from "./Modal.module.scss";
 type ModalPropsType = {
     children: ReactNode;
     isOpen: boolean;
-    setOpen: Dispatch<SetStateAction<boolean>>
+    setOpen: Dispatch<SetStateAction<boolean>>;
+    missClose?: boolean;
 }
 
 const Modal: FC<ModalPropsType> = (
-    {children, isOpen, setOpen}
+    {children, isOpen, setOpen, missClose = true}
 ) => {
 
     function modalClose() {
+        if(!missClose) return; 
         setOpen(false);
     }
 

@@ -10,7 +10,6 @@ import IReduceProject from "interfaces/entities/IReducedProject";
 import Portal from "components/common/Portal";
 import Modal from "components/common/Modal";
 import CreateProject from "components/common/Forms/CreateProjectForm";
-import ProjectControl from "components/ProjectControl";
 
 type ProjectsContextType = {
     getProjects: () => unknown;
@@ -19,13 +18,20 @@ type ProjectsContextType = {
     setOpenModal: Dispatch<SetStateAction<boolean>>
     projects: IReduceProject[];
     maxEntities: number;
-}
+};
+
+type ProjectSettingsContextType = {
+    add: () => unknown;
+    settings: () => unknown;
+    remove: () => unknown;
+};
 
 export const ProjectsContext = createContext<ProjectsContextType>({} as ProjectsContextType); 
 
+export const ProjectSettingsContext = createContext<ProjectSettingsContextType>({} as ProjectSettingsContextType);
+
 const ProjectsPage: FC = () => {
 
-    const {id} = useParams();
 
     const {user, error, isLoading} = useAppSelector(state => state.userReducer);
     const navigate = useNavigate();
@@ -40,6 +46,9 @@ const ProjectsPage: FC = () => {
     }, [user, error, navigate, isLoading]);
 
     const [openModal, setOpenModal] = useState<boolean>(false);
+    const [openResource, setOpenResource] = useState<boolean>(false);
+    const [openSettings, setOpenSettings] = useState<boolean>(false);
+    const [openRemove, setOpenRemove] = useState<boolean>(false);
 
     function getProjects() {
         if(loaded) return;
@@ -50,7 +59,17 @@ const ProjectsPage: FC = () => {
         dispatch(createProject(name));
     }
 
-    
+    function openResourceModal() {
+        setOpenResource(true);
+    }
+
+    function openSettingsModal() {
+        setOpenSettings(true);
+    }
+
+    function openRemoveModal() {
+        setOpenRemove(true);
+    }
 
 
 
@@ -64,12 +83,27 @@ const ProjectsPage: FC = () => {
             setOpenModal
         }}>
             <Container>
-                <ControlPanel/>
+                <ProjectSettingsContext.Provider value={{
+                    add: openResourceModal,
+                    remove: openRemoveModal,
+                    settings: openSettingsModal,
+                }}>
+                    <ControlPanel/>
+                </ProjectSettingsContext.Provider>
                 <Outlet/>
             </Container> 
             <Portal id="root">
                     <Modal isOpen={openModal} setOpen={setOpenModal}>
-                        {!id? <CreateProject/>:null}
+                        <CreateProject/>
+                    </Modal>
+                    <Modal isOpen={openResource} setOpen={() => setOpenResource(false)}>
+                        Создание ресурса
+                    </Modal>
+                    <Modal isOpen={openSettings} setOpen={() => setOpenSettings(false)}>
+                        Настройка проекта
+                    </Modal>
+                    <Modal isOpen={openRemove} setOpen={() => setOpenRemove(false)} missClose={false}>
+                        Удалить проект?
                     </Modal>
             </Portal>
         </ProjectsContext.Provider>
