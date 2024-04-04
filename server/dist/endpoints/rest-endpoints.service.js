@@ -28,11 +28,18 @@ let RestEndpointsService = class RestEndpointsService {
         return (await this.projectService.findOne(link));
     }
     async findEndPoint(link, endpoint) {
-        const query = `SELECT json_array_elements(value) as items from entities where name='${endpoint}' and projectlink='${link}'`;
-        const result = (await this.pg.query(query)).rows.map(e => (Object.assign({}, e.items)));
-        if (!result.length)
-            throw new Error(Errors_constants_1.Errors.notFoundException);
-        return result;
+        try {
+            await this.checkProject(link);
+            const query = `SELECT json_array_elements(value) as items from entities where name='${endpoint}' and projectlink='${link}'`;
+            const result = (await this.pg.query(query)).rows.map(e => (Object.assign({}, e.items)));
+            if (!result.length)
+                throw new Error(Errors_constants_1.Errors.notFoundException);
+            return result;
+        }
+        catch (e) {
+            console.log(e.message);
+            throw new common_1.BadRequestException(e.message);
+        }
     }
     async findAll(link, endpoint) {
         try {
