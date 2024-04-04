@@ -1,0 +1,1 @@
+{"version":3,"file":"create-entity.dto.js","sourceRoot":"","sources":["../../../src/entity/dto/create-entity.dto.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,6CAA8C;AAE9C,MAAa,eAAe;CAS3B;AARG;IAAC,IAAA,qBAAW,EAAC;QACT,OAAO,EAAE,MAAM;KAClB,CAAC;;6CACW;AACb;IAAC,IAAA,qBAAW,EAAC;QACT,OAAO,EAAE,IAAI;KAChB,CAAC;;6CACW;AARjB,0CASC"}

@@ -1,0 +1,21 @@
+@import "styles/vars.scss";
+
+.logo {
+    border: none;
+
+    & legend {
+        display: none;
+    }
+
+    &__link {
+        font-size: calc(14px + 14 * (100vw / $container-width));
+        font-weight: bold;
+        text-decoration: none;
+
+        &:visited {
+            color: black;
+        }
+    }
+
+
+}

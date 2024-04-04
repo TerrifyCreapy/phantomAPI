@@ -1,0 +1,16 @@
+.auth {
+    padding: 90px 0 150px;
+    max-width: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 auto;
+    gap: 15%;
+
+    ._container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

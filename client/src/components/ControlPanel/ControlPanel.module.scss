@@ -1,0 +1,51 @@
+@import "../../styles/vars.scss";
+
+.projects__control {
+    padding: 3% 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &_path {
+        display: flex;
+        gap: calc(5px + 5 * (100vw / 850));
+        padding: 1em 0 1.5em 0;
+
+        &_active {
+            color: #000 !important;
+        }
+
+    }
+
+
+    .projects__path_item,
+    &_item {
+        width: fit-content;
+        text-align: center;
+        font-size: calc(12px + 8 * (100vw / 1600));
+        color: rgba(0, 0, 0, .4);
+        font-weight: normal;
+    }
+
+    &_item {
+
+        text-decoration: none;
+
+        transition: all .3s ease-in-out;
+
+        &:hover {
+            color: black;
+        }
+
+        &::first-letter {
+            text-transform: uppercase;
+        }
+    }
+
+    &_btn {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+}

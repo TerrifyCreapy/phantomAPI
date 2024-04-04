@@ -1,0 +1,19 @@
+.modal {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, .4);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+
+    &__card {
+        background-color: white;
+        padding: 5vh 1vw;
+        border-radius: 15px;
+        border: 2px solid rgb(137, 137, 223);
+        max-width: 35vw;
+        width: 100%;
+    }
+}

@@ -1,0 +1,7 @@
+.projects_grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 50px;
+    column-gap: 30px;
+}

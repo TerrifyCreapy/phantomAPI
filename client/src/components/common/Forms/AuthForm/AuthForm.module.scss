@@ -1,0 +1,25 @@
+    .auth {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+        .input__form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 3%;
+
+
+        }
+
+        &__buttons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            &>span {
+                cursor: pointer;
+            }
+        }
+    }

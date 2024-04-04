@@ -1,0 +1,8 @@
+.input__form_label {
+    margin-left: 3%;
+    text-transform: lowercase;
+
+    &::first-letter {
+        text-transform: uppercase;
+    }
+}

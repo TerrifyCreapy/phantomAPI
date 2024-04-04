@@ -1,0 +1,38 @@
+create table users(
+ email VARCHAR(255) NOT NULL PRIMARY KEY,
+ password varchar(255) NOT NULL,
+ activated boolean default false);
+
+create table keys(
+ id SERIAL PRIMARY KEY,
+ device VARCHAR(255) not null,
+ key varchar(255) not null);
+
+create table projects(
+    link VARCHAR(255) NOT NULL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
+    auth Boolean NOT NULL DEFAULT false,
+    register Boolean NOT NULL DEFAULT false,
+    uploads Boolean NOT NULL DEFAULT false,
+    userEmail VARCHAR(255) NOT NULL references users(email));
+
+create table entities(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    value JSON,
+    projectLink VARCHAR(255) NOT NULL references projects(link));
+
+    create table files(
+ id SERIAL PRIMARY KEY,
+ original_filename varchar(255) not null,
+ filename varchar(255) not null unique,
+ memtype varchar(255) not null,
+ size float);
+
+ create table projectsfiles(
+ id serial primary key,
+ projectlink varchar(255) references projects(link),
+ fileid serial references files(id));
+
+

@@ -1,0 +1,38 @@
+//fomts
+
+$font-edu: 'Edu TAS Beginner', cursive;
+
+$font-inknut: 'Inknut Antiqua', serif;
+
+$font-josefin: 'Josefin Sans', sans-serif;
+
+//size
+$container-padding: 25;
+$container-width: 1600 + 2 * $container-padding;
+
+
+//colors
+:root {
+    --main-bg-color: white;
+}
+
+body[dark] {
+    --main-bg-color: black;
+}
+
+$main-bg-color: white;
+$light-blue: rgba(211, 227, 228, 0.2);
+$dark-bg-color: #000000;
+$main-color: black;
+$dark-color: white;
+
+.dark {
+
+    background-color: $dark-bg-color;
+    color: $dark-color;
+
+    *:visited,
+    * {
+        color: $dark-color;
+    }
+}

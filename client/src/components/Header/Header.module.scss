@@ -1,0 +1,61 @@
+@import "styles/vars.scss";
+
+.header {
+    padding: 26px 0;
+    background-color: $light-blue;
+
+    animation: appear .9s ease-in-out forwards;
+
+    ._container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__buttons {
+        display: flex;
+        gap: 2em;
+    }
+
+    &__button {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        outline: none;
+        border: 1px solid transparent;
+        background-color: transparent;
+        font-size: 18px;
+        padding: 5px 10px;
+        border-radius: 10px;
+        transition: all .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+        &:hover {
+            background-color: rgb(255, 255, 255);
+            border: 1px solid rgba(0, 0, 0, .1);
+
+            .button_icon {
+                fill: rgba(0, 0, 0, 1);
+            }
+        }
+    }
+
+    .button {
+        &_icon {
+            width: 24px;
+            height: 24px;
+            fill: rgba(0, 0, 0, .3);
+            transition: fill .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+    }
+
+    @keyframes appear {
+        0% {
+            transform: translateY(-100%);
+        }
+
+        100% {
+            transform: translateY(0);
+        }
+    }
+}
