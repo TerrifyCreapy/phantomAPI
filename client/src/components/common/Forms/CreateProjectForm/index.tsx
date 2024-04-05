@@ -3,6 +3,7 @@ import styles from "./CreateProject.module.scss";
 import Input from "components/common/Input";
 import Button from "components/common/Buttons/Button";
 import { ProjectsContext } from "pages/ProjectsPage";
+import MakeCancel from "components/MakeCancel";
 
 const CreateProject: FC = () => {
 
@@ -46,10 +47,13 @@ const CreateProject: FC = () => {
             <h1 className={styles.control__title}>новый проект</h1>
             <Input placeholder="Введите название" className={styles.control__input} onBlur={touched} value={name} onChange={nameChange}/>
             {isError() && <span className={styles.control__error}>{error}</span>}
-            <div className={styles.control__buttons}>
-                <Button type="submit" className={styles.control__button} disabled={(isTouched && error.length) || !name.length?true:false} onClick={onSubmit} text="создать"/>
-                <Button className={styles.control__button} onClick={onCancel} text="отменить"/>
-            </div>
+            <MakeCancel 
+                text="создать" 
+                color="success"
+                disabled={(isTouched && error.length) || !name.length?true:false}
+                onClick={onSubmit}
+                onCancel={onCancel}
+            />
         </form>
  )
 };

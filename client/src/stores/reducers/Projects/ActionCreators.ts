@@ -1,27 +1,38 @@
 import { AppDispatch } from "stores/store";
-import { projectSlice } from "./ProjectSlice";
+import { projectsSlice } from "./ProjectSlice";
 import ProjectsAPI from "api/Projects-api";
+import IReduceProject from "interfaces/entities/IReducedProject";
 
 export const fetchProjects = () => async (dispatch: AppDispatch) => {
     try {
-        dispatch(projectSlice.actions.setLoading(true));
+        dispatch(projectsSlice.actions.setLoading(true));
         const response = await ProjectsAPI.getProjects();
-        dispatch(projectSlice.actions.setProjectsSuccess(response?.rows || []));
-        dispatch(projectSlice.actions.setMaxEntities(response?.maxEntities || 0));
+        dispatch(projectsSlice.actions.setProjectsSuccess(response?.rows || []));
+        dispatch(projectsSlice.actions.setMaxEntities(response?.maxEntities || 0));
     }
     catch (e: any) {
-        dispatch(projectSlice.actions.projectError("error"))
+        dispatch(projectsSlice.actions.projectError("error"))
     }
-}
+};
 
 export const createProject = (name: string) => async (dispatch: AppDispatch) => {
     try {
-        dispatch(projectSlice.actions.setLoading(true));
+        dispatch(projectsSlice.actions.setLoading(true));
         const response = await ProjectsAPI.createProject(name);
-        if (!response) throw new Error();
-        dispatch(projectSlice.actions.createProjectSuccess(response));
+        dispatch(projectsSlice.actions.createProjectSuccess(response as IReduceProject));
     }
     catch (e: any) {
-        dispatch(projectSlice.actions.projectError("error"));
+        dispatch(projectsSlice.actions.projectError("error"));
+    }
+};
+
+export const removeProject = (link: string) => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(projectsSlice.actions.setLoading(true));
+        const response = await ProjectsAPI.removeProject(link);
+        dispatch(projectsSlice.actions.removeProjectsSuccess(link));
+    }
+    catch (e: any) {
+        dispatch(projectsSlice.actions.projectError("error"));
     }
 }

@@ -5,11 +5,16 @@ import { Outlet, useNavigate, useParams } from "react-router";
 import ControlPanel from "components/ControlPanel";
 import Container from "components/common/Container";
 import useAppDispatch from "hooks/useAppDispatch";
-import { createProject, fetchProjects } from "stores/reducers/Projects/ActionCreators";
+import { createProject, fetchProjects, removeProject } from "stores/reducers/Projects/ActionCreators";
 import IReduceProject from "interfaces/entities/IReducedProject";
 import Portal from "components/common/Portal";
 import Modal from "components/common/Modal";
 import CreateProject from "components/common/Forms/CreateProjectForm";
+import ProjectsSettings from "components/ProjectSettings";
+import Remove from "components/ProjectSettings/Remove";
+import { fetchProject, removeEntity } from "stores/reducers/Project/ActionCreators";
+import IProject from "interfaces/entities/IProject";
+import { resetError } from "stores/reducers/Project/ProjectSlice";
 
 type ProjectsContextType = {
     getProjects: () => unknown;
@@ -26,24 +31,41 @@ type ProjectSettingsContextType = {
     remove: () => unknown;
 };
 
+type ProjectContextType = {
+    project: IProject | null;
+    error: string;
+    isLoading: boolean;
+    resetError: () => unknown;
+    remove: (id: number) => unknown;
+}
+
 export const ProjectsContext = createContext<ProjectsContextType>({} as ProjectsContextType); 
 
 export const ProjectSettingsContext = createContext<ProjectSettingsContextType>({} as ProjectSettingsContextType);
 
+export const ProjectContext = createContext<ProjectContextType>({} as ProjectContextType);
+
 const ProjectsPage: FC = () => {
 
+    const {id} = useParams();
+    const navigate = useNavigate();
 
     const {user, error, isLoading} = useAppSelector(state => state.userReducer);
-    const navigate = useNavigate();
     const {projects, maxEntities, loaded} = useAppSelector(state => state.projectsReducer);
+    const {project, isLoadingProject, errorProject} = useAppSelector(state => state.projectReducer);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         if((!user || error.length) && !isLoading) {
             navigate(Routes.MAIN_PATH);
         } 
+        else {
+            if(id) {
+                dispatch(fetchProject(id));
+            }
+        }
 
-    }, [user, error, navigate, isLoading]);
+    }, [user, error, navigate, isLoading, projects, dispatch, id]);
 
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [openResource, setOpenResource] = useState<boolean>(false);
@@ -59,6 +81,19 @@ const ProjectsPage: FC = () => {
         dispatch(createProject(name));
     }
 
+    function onRemoveEntity(id: number) {
+        if(id) {
+            dispatch(removeEntity(id));
+        }
+    }
+
+    function onRemoveProject() {
+        if(id) {
+            dispatch(removeProject(id));
+            setOpenRemove(false);
+        }
+    }
+
     function openResourceModal() {
         setOpenResource(true);
     }
@@ -69,6 +104,10 @@ const ProjectsPage: FC = () => {
 
     function openRemoveModal() {
         setOpenRemove(true);
+    }
+
+    function onResetError() {
+        dispatch(resetError());
     }
 
 
@@ -90,21 +129,56 @@ const ProjectsPage: FC = () => {
                 }}>
                     <ControlPanel/>
                 </ProjectSettingsContext.Provider>
-                <Outlet/>
+                <ProjectContext.Provider value={{
+                    project,
+                    error: errorProject,
+                    isLoading: isLoadingProject,
+                    resetError: onResetError,
+                    remove: onRemoveEntity,
+                }}>
+                    <Outlet/>
+                </ProjectContext.Provider>
+                
             </Container> 
             <Portal id="root">
                     <Modal isOpen={openModal} setOpen={setOpenModal}>
                         <CreateProject/>
                     </Modal>
                     <Modal isOpen={openResource} setOpen={() => setOpenResource(false)}>
-                        Создание ресурса
+                        <ProjectsSettings
+                            action="создать"
+                            text="создание ресурса"
+                            color="success"
+                            onClick={() => 1}
+                            onCancel={() => setOpenResource(false)}
+                        >
+                            <span> Вы действительно хотите создать ресурс?</span>
+                        </ProjectsSettings>
                     </Modal>
                     <Modal isOpen={openSettings} setOpen={() => setOpenSettings(false)}>
-                        Настройка проекта
+                    <ProjectsSettings
+                            action="сохранить"
+                            text="создание ресурса"
+                            color="success"
+                            onClick={() => 1}
+                            onCancel={() => setOpenSettings(false)}
+                        >
+                            <span> Вы действительно хотите настроить проект?</span>
+                        </ProjectsSettings>
                     </Modal>
                     <Modal isOpen={openRemove} setOpen={() => setOpenRemove(false)} missClose={false}>
-                        Удалить проект?
+                        <ProjectsSettings
+                            action="удалить"
+                            text="удалить проект?"
+                            color="warn"
+                            outline
+                            onClick={onRemoveProject}
+                            onCancel={() => setOpenRemove(false)}
+                        >
+                            <Remove/>
+                        </ProjectsSettings>
                     </Modal>
+                    
             </Portal>
         </ProjectsContext.Provider>
         

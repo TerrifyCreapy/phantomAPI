@@ -12,7 +12,6 @@ let SubdomainMiddleware = class SubdomainMiddleware {
     use(req, res, next) {
         const hostname = req.hostname;
         const subdomain = hostname.split('.')[0];
-        console.log(subdomain);
         req.headers.subdomain = subdomain;
         next();
     }

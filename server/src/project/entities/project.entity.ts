@@ -6,4 +6,5 @@ export interface IProject {
     register: boolean;
     uploads: boolean;
     userEmail: string;
+    entities?: any[]
 }

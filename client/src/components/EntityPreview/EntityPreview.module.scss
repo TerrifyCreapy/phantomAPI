@@ -1,0 +1,91 @@
+.container {
+    list-style-type: none;
+    width: 100%;
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    inset: 0;
+
+    transition: all .1s linear;
+
+    &:hover {
+        top: -5px;
+    }
+
+    .left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &__endpoint {
+            position: relative;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            align-self: flex-start;
+            width: 100%;
+
+            transition: all .1s linear;
+
+            &>svg {
+                position: relative;
+                opacity: 0;
+                scale: .3;
+                transition: all .1s linear;
+                left: -10px;
+            }
+
+            &:hover {
+                color: rgb(144, 144, 230);
+                cursor: pointer;
+
+                &>svg {
+                    opacity: 1;
+                    scale: 1;
+                    left: 0;
+                }
+            }
+        }
+
+        &__count {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+            &_progress {
+                position: relative;
+                width: 5vw;
+                height: 4px;
+                background-color: rgb(128, 128, 128);
+                border-radius: 40px;
+
+                &::before {
+                    content: "";
+                    display: block;
+                    position: absolute;
+                    inset: 0;
+                    background-color: rgb(241, 12, 12);
+                    width: var(--items);
+                    height: 4px;
+                    border-radius: 40px;
+                }
+            }
+
+            &_text {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+            }
+
+        }
+    }
+
+    .right {
+        display: flex;
+        gap: 10px;
+    }
+}

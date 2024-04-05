@@ -32,7 +32,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], EndpointController.prototype, "getData", null);
 EndpointController = __decorate([
-    (0, common_1.Controller)('endpoints'),
+    (0, common_1.Controller)(''),
     __metadata("design:paramtypes", [rest_endpoints_service_1.RestEndpointsService])
 ], EndpointController);
 exports.EndpointController = EndpointController;

@@ -32,10 +32,8 @@ let AuthService = class AuthService {
     }
     async validateUser(email, password) {
         const user = await this.userService.findByEmail(email);
-        console.log(user, "user123");
         if (user) {
             const compare = await bcrypt.compare(password, user.password);
-            console.log(compare);
             if (compare) {
                 const { password, refresh } = user, result = __rest(user, ["password", "refresh"]);
                 return result;
@@ -56,7 +54,6 @@ let AuthService = class AuthService {
             };
         }
         catch (e) {
-            console.log(e.message);
             throw new common_1.ForbiddenException("Error with login");
         }
     }
@@ -81,7 +78,6 @@ let AuthService = class AuthService {
     async me(refresh) {
         try {
             const user = await this.userService.findByRefresh(refresh);
-            console.log(user, "123");
             if (!user)
                 return null;
             const accessToken = this.jwtService.sign({ email: user.email }, { expiresIn: process.env.JWT_EXPIRES_IN });

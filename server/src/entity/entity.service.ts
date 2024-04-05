@@ -16,7 +16,7 @@ export class EntityService {
 
       const project = (await this.pg.query('SELECT * FROM projects WHERE link=' + `'${link}'`)).rows.length;
       if (!project) throw new Error(Errors.notFoundException);
-      const query = `SELECT id, name FROM entities where "projectlink"='${link}'`;
+      const query = `select id, name, json_array_length(value) as item_count from entities where projectlink='${link}';`;
       const queryCount = `SELECT count(*) FROM entities where "projectlink"='${link}'`;
       const result = (await this.pg.query(query)).rows;
       const totalCount = (await this.pg.query(queryCount)).rows[0].count;
@@ -126,8 +126,21 @@ export class EntityService {
       }
       throw new InternalServerErrorException();
     }
+  }
 
-
+  async removeByProject(link: string) {
+    try {
+      if (!link) throw new Error(Errors.badRequestException);
+      const query = `DELETE FROM entities WHERE projectlink='${link}'`;
+      const response = await this.pg.query(query);
+      return true;
+    }
+    catch (e: any) {
+      if (e.massage = Errors.badRequestException) {
+        throw new BadRequestException(e.message);
+      }
+      throw new InternalServerErrorException();
+    }
   }
 
 

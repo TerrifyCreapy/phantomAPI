@@ -33,10 +33,19 @@ export class ProjectService {
   }
 
   async findOne(link: string): Promise<IProject> {
-    const query = `SELECT * FROM projects where "link"='${link}'`;
-    const result = await this.pg.query(query);
-    if (!result.rows.length) throw new BadRequestException("Unknown link");
-    return { ...result.rows[0] };
+    try {
+      console.log(link);
+
+      const query = `SELECT * FROM projects where "link"='${link}'`;
+      const result = await this.pg.query(query);
+      if (!result.rows.length) throw new Error("NOTFOUND");
+      const entites = await this.entityService.findAll(link);
+      return { ...result.rows[0], entities: entites };
+    }
+    catch (e) {
+      if (e.message === "NOTFOUND") throw new NotFoundException("The project not found!");
+    }
+
   }
 
   async create(createProjectDto: CreateProjectDto, email: string) {
@@ -114,6 +123,7 @@ export class ProjectService {
   }
 
   async remove(link: string) {
+    const removeEntity = await this.entityService.removeByProject(link);
     const query = `DELETE FROM projects WHERE link='${link}'`;
     const result = (await this.pg.query(query)).rowCount;
 

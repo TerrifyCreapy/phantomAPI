@@ -5,6 +5,7 @@ interface IProject {
     register: boolean;
     uploads: boolean;
     useremail: string;
-}
+    entities: { rows: any[], totalCount: number };
+};
 
 export default IProject;

@@ -27,7 +27,7 @@ let EntityService = class EntityService {
             const project = (await this.pg.query('SELECT * FROM projects WHERE link=' + `'${link}'`)).rows.length;
             if (!project)
                 throw new Error(Errors_constants_1.Errors.notFoundException);
-            const query = `SELECT id, name FROM entities where "projectlink"='${link}'`;
+            const query = `select id, name, json_array_length(value) as item_count from entities where projectlink='${link}';`;
             const queryCount = `SELECT count(*) FROM entities where "projectlink"='${link}'`;
             const result = (await this.pg.query(query)).rows;
             const totalCount = (await this.pg.query(queryCount)).rows[0].count;
@@ -120,6 +120,21 @@ let EntityService = class EntityService {
         catch (e) {
             if (e.message === Errors_constants_1.Errors.notFoundException) {
                 throw new common_1.NotFoundException("Entity not found");
+            }
+            throw new common_1.InternalServerErrorException();
+        }
+    }
+    async removeByProject(link) {
+        try {
+            if (!link)
+                throw new Error(Errors_constants_1.Errors.badRequestException);
+            const query = `DELETE FROM entities WHERE projectlink='${link}'`;
+            const response = await this.pg.query(query);
+            return true;
+        }
+        catch (e) {
+            if (e.massage = Errors_constants_1.Errors.badRequestException) {
+                throw new common_1.BadRequestException(e.message);
             }
             throw new common_1.InternalServerErrorException();
         }

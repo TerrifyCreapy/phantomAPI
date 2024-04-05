@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, UseGuards, Param, Patch, Delete, HttpCode, Req } from '@nestjs/common';
 import { RestEndpointsService } from './rest-endpoints.service';
 
-@Controller('endpoints')
+@Controller('')
 export class EndpointController {
     constructor(private readonly endpointService: RestEndpointsService) { }
 

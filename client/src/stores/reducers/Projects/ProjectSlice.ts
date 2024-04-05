@@ -17,7 +17,7 @@ const initialState: InitialStateType = {
     loaded: false,
 }
 
-export const projectSlice = createSlice({
+export const projectsSlice = createSlice({
     name: "projects",
     initialState,
     reducers: {
@@ -25,19 +25,29 @@ export const projectSlice = createSlice({
             state.loaded = true;
             state.isLoading = action.payload;
         },
+
         createProjectSuccess(state, action: PayloadAction<IReduceProject>) {
             state.isLoading = false;
             state.error = "";
             state.projects.push(action.payload);
         },
+
         setProjectsSuccess(state, action: PayloadAction<IReduceProject[]>) {
             state.isLoading = false;
             state.error = "";
             state.projects = action.payload;
         },
+
+        removeProjectsSuccess(state, action: PayloadAction<string>) {
+            state.isLoading = false;
+            state.error = "";
+            state.projects = state.projects.filter(e => e.link !== action.payload);
+        },
+
         setMaxEntities(state, action: PayloadAction<number>) {
             state.maxEntities = action.payload;
         },
+
         projectError(state, action: PayloadAction<string>) {
             state.isLoading = false;
             state.error = action.payload;
@@ -45,4 +55,4 @@ export const projectSlice = createSlice({
     }
 });
 
-export default projectSlice.reducer;
+export default projectsSlice.reducer;
