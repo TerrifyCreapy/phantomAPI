@@ -24,6 +24,7 @@ let EntityController = class EntityController {
         this.entityService = entityService;
     }
     findAll(link) {
+        console.log(1);
         return this.entityService.findAll(link);
     }
     findOne(id) {
@@ -48,10 +49,10 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], EntityController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)(':id'),
+    (0, common_1.Get)('one/:id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], EntityController.prototype, "findOne", null);
 __decorate([

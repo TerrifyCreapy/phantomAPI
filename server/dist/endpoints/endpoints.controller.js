@@ -22,6 +22,9 @@ let EndpointController = class EndpointController {
     async getData(req, endpoint) {
         return (await this.endpointService.findEndPoint(req.headers.subdomain, endpoint));
     }
+    async addData(req, endpoint, body) {
+        return (await this.endpointService.createItem(req.headers.subdomain, endpoint, body));
+    }
 };
 __decorate([
     (0, common_1.Get)(':endpoint'),
@@ -31,6 +34,15 @@ __decorate([
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], EndpointController.prototype, "getData", null);
+__decorate([
+    (0, common_1.Post)(":endpoint"),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)('endpoint')),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String, Object]),
+    __metadata("design:returntype", Promise)
+], EndpointController.prototype, "addData", null);
 EndpointController = __decorate([
     (0, common_1.Controller)(''),
     __metadata("design:paramtypes", [rest_endpoints_service_1.RestEndpointsService])

@@ -1,6 +1,6 @@
 import useAppSelector from "hooks/useAppSelector";
 import { Routes } from "constants/routes";
-import {Dispatch, FC, SetStateAction, createContext, useEffect, useState} from "react";
+import {ChangeEvent, Dispatch, FC, SetStateAction, createContext, useEffect, useState} from "react";
 import { Outlet, useNavigate, useParams } from "react-router";
 import ControlPanel from "components/ControlPanel";
 import Container from "components/common/Container";
@@ -12,9 +12,10 @@ import Modal from "components/common/Modal";
 import CreateProject from "components/common/Forms/CreateProjectForm";
 import ProjectsSettings from "components/ProjectSettings";
 import Remove from "components/ProjectSettings/Remove";
-import { fetchProject, removeEntity } from "stores/reducers/Project/ActionCreators";
+import { createEntity, fetchProject, getData, removeEntity, updateEntity } from "stores/reducers/Project/ActionCreators";
 import IProject from "interfaces/entities/IProject";
 import { resetError } from "stores/reducers/Project/ProjectSlice";
+import ResourceEdit from "components/ProjectSettings/ResourceEdit";
 
 type ProjectsContextType = {
     getProjects: () => unknown;
@@ -34,9 +35,12 @@ type ProjectSettingsContextType = {
 type ProjectContextType = {
     project: IProject | null;
     error: string;
+    entityJson: string;
     isLoading: boolean;
     resetError: () => unknown;
     remove: (id: number) => unknown;
+    onLoadData: (id: number) => unknown;
+    onUpdate: (id: number, name: string, value: string) => unknown;
 }
 
 export const ProjectsContext = createContext<ProjectsContextType>({} as ProjectsContextType); 
@@ -52,7 +56,7 @@ const ProjectsPage: FC = () => {
 
     const {user, error, isLoading} = useAppSelector(state => state.userReducer);
     const {projects, maxEntities, loaded} = useAppSelector(state => state.projectsReducer);
-    const {project, isLoadingProject, errorProject} = useAppSelector(state => state.projectReducer);
+    const {project, isLoadingProject, errorProject, entityJson} = useAppSelector(state => state.projectReducer);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -110,6 +114,30 @@ const ProjectsPage: FC = () => {
         dispatch(resetError());
     }
 
+    const [entityName, setEntityName] = useState<string>("");
+    const [entityValue, setEntityValue] = useState<string>("[]");
+
+    function changeName(e: ChangeEvent<HTMLInputElement>) {
+        setEntityName(e.target.value);
+    }
+
+    function changeEntityValue(e: ChangeEvent<HTMLTextAreaElement>) {
+        setEntityValue(e.target.value);
+    }
+
+
+    function onCreateEntity() {
+        if(id) dispatch(createEntity(entityName, id, entityValue));
+        setEntityName("");
+    };
+
+    function onLoadValue(id: number) {
+        dispatch(getData(id));
+    }
+
+    function onUpdateEntity(id: number, name: string, value: string) {
+        dispatch(updateEntity(id, name, value));
+    }
 
 
     return (
@@ -135,6 +163,9 @@ const ProjectsPage: FC = () => {
                     isLoading: isLoadingProject,
                     resetError: onResetError,
                     remove: onRemoveEntity,
+                    entityJson: entityJson,
+                    onLoadData: onLoadValue,
+                    onUpdate: onUpdateEntity,
                 }}>
                     <Outlet/>
                 </ProjectContext.Provider>
@@ -144,15 +175,21 @@ const ProjectsPage: FC = () => {
                     <Modal isOpen={openModal} setOpen={setOpenModal}>
                         <CreateProject/>
                     </Modal>
-                    <Modal isOpen={openResource} setOpen={() => setOpenResource(false)}>
+                    <Modal isOpen={openResource} setOpen={() => setOpenResource(false)} maxWidth="50">
                         <ProjectsSettings
                             action="создать"
-                            text="создание ресурса"
+                            text=""
                             color="success"
-                            onClick={() => 1}
+                            onClick={onCreateEntity}
                             onCancel={() => setOpenResource(false)}
                         >
-                            <span> Вы действительно хотите создать ресурс?</span>
+                            <ResourceEdit 
+                                path={`http://${id}.localhost:7000/api/v0.1/`} 
+                                name={entityName} 
+                                changeName={changeName}
+                                value={entityValue}
+                                changeValue={changeEntityValue}
+                            />
                         </ProjectsSettings>
                     </Modal>
                     <Modal isOpen={openSettings} setOpen={() => setOpenSettings(false)}>
@@ -178,7 +215,6 @@ const ProjectsPage: FC = () => {
                             <Remove/>
                         </ProjectsSettings>
                     </Modal>
-                    
             </Portal>
         </ProjectsContext.Provider>
         

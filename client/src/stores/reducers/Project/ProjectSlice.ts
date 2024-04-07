@@ -5,12 +5,14 @@ import IReduceProject from "interfaces/entities/IReducedProject";
 type InitialStateType = {
     isLoadingProject: boolean;
     project: IProject | null;
+    entityJson: string;
     errorProject: string;
 }
 
 const initialState: InitialStateType = {
     isLoadingProject: true,
     project: null,
+    entityJson: "[]",
     errorProject: "",
 }
 
@@ -31,6 +33,9 @@ export const projectSlice = createSlice({
             state.isLoadingProject = false;
         },
 
+        setJsonSuccess(state, action: PayloadAction<string>) {
+            state.entityJson = action.payload;
+        },
         setRemoveEntitySuccess(state, action: PayloadAction<number>) {
             if (!state.project) return;
             state.project.entities.rows = state.project?.entities.rows.filter(e => e.id !== action.payload);

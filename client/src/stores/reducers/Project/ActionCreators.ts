@@ -21,6 +21,40 @@ export const fetchProject = (link: string) => async (dispatch: AppDispatch) => {
     }
 };
 
+export const createEntity = (name: string, link: string, value: string) => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(projectSlice.actions.setLoading(true));
+        const response = await EntityAPI.add(name, link, JSON.stringify(JSON.parse(value), null, 2));
+
+    }
+    catch (e: any) {
+
+    }
+}
+
+export const getData = (id: number) => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(projectSlice.actions.setLoading(true));
+        const response = await EntityAPI.getOne(id);
+        dispatch(projectSlice.actions.setJsonSuccess(response));
+    }
+    catch (e: any) {
+
+    }
+};
+
+export const updateEntity = (id: number, name: string, value: string) => async (dispatch: AppDispatch) => {
+    try {
+        dispatch(projectSlice.actions.setLoading(true));
+        const response = await EntityAPI.update(id, name, value);
+        if (response)
+            dispatch(projectSlice.actions.setJsonSuccess(value));
+    }
+    catch (e: any) {
+
+    }
+}
+
 export const removeEntity = (id: number) => async (dispatch: AppDispatch) => {
     try {
         dispatch(projectSlice.actions.setLoading(true));

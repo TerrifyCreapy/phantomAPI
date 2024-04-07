@@ -19,7 +19,7 @@ const ProjectContainer: FC = () => {
         }
     }, [error, isLoading, navigate, resetError]);
 
-    const path = `http://${project?.link}.localhost:7000/api/v0.1`
+    const path = `http://${id}.localhost:7000/api/v0.1`
 
     return (
         <div className={styles.container}>

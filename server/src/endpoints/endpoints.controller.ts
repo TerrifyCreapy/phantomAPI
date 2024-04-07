@@ -9,4 +9,9 @@ export class EndpointController {
     async getData(@Req() req, @Param('endpoint') endpoint: string) {
         return (await this.endpointService.findEndPoint(req.headers.subdomain, endpoint));
     }
+
+    @Post(":endpoint")
+    async addData(@Req() req, @Param('endpoint') endpoint: string, @Body() body: any) {
+        return (await this.endpointService.createItem(req.headers.subdomain, endpoint, body));
+    }
 }

@@ -19,11 +19,11 @@ const ProjectsSettings: FC<ProjectsSettingsType> = ({
     color,
     outline,
     onClick,
-    onCancel
+    onCancel,
 }) => {
     return (
         <div className={styles.container}>
-            <h1 className={styles.container_title}>{text}</h1>
+            {text?<h1 className={styles.container_title}>{text}</h1>:null}
             {children}
             <MakeCancel text={action} onCancel={onCancel} onClick={onClick} color={color} outline={outline}/>
         </div>

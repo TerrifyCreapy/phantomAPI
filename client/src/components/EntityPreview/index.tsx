@@ -1,4 +1,4 @@
-import {CSSProperties, FC, useState} from "react";
+import {CSSProperties, ChangeEvent, FC, useContext, useEffect, useState} from "react";
 import styles from "./EntityPreview.module.scss";
 import Button from "components/common/Buttons/Button";
 import { faGear, faSquareArrowUpRight, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -7,6 +7,8 @@ import Portal from "components/common/Portal";
 import Modal from "components/common/Modal";
 import ProjectsSettings from "components/ProjectSettings";
 import Remove from "components/ProjectSettings/Remove";
+import ResourceEdit from "components/ProjectSettings/ResourceEdit";
+import { ProjectContext } from "pages/ProjectsPage";
 
 const maxItems = 100;
 
@@ -23,17 +25,47 @@ const EntityPreview: FC<EntityPreviewType> = ({
     endpoint,
     item_count,
     path,
-    remove
+    remove,
 }) => {
+
+    const {entityJson, onLoadData, onUpdate} = useContext(ProjectContext);
 
     const style = {
         "--items": `${item_count / maxItems * 100}%`,
     } as CSSProperties;
 
+    console.log(entityJson)
+
+    const [openEdit, setOpenEdit] = useState<boolean>(false);
     const [openRemove, setOpenRemove] = useState<boolean>(false);
+    const [name, setName] = useState<string>(endpoint);
+    const [valueEntity, setValue] = useState<string>(entityJson);
+
+    useEffect(() => {
+        setValue(entityJson);
+    }, [entityJson])
+
+    
+
+    function onChangeName(e: ChangeEvent<HTMLInputElement>) {
+        setName(e.target.value);
+    }
+
+    function onChangeValue(e: ChangeEvent<HTMLTextAreaElement>) {
+        setValue(e.target.value);
+    }
 
     function onOpenRemove() {
         setOpenRemove(true);
+    }
+
+    function onOpenEdit() {
+        onLoadData(id);
+        setOpenEdit(true);
+    }
+
+    function onSaveUpdate() {
+        onUpdate(id, name, valueEntity);
     }
 
     function removeItem() {
@@ -58,10 +90,29 @@ const EntityPreview: FC<EntityPreviewType> = ({
                 </div>
             </div>
             <div className={styles.right}>
-                <Button icon={faGear} outline color="gray"/>
+                <Button icon={faGear} outline color="gray" onClick={onOpenEdit}/>
                 <Button icon={faTrash} outline color="warn" onClick={onOpenRemove}/>
             </div>
             <Portal id="root">
+                <Modal isOpen={openEdit} setOpen={() => setOpenEdit(false)} missClose={false}>
+                    <ProjectsSettings
+                        action="сохранить"
+                        text=""
+                        color="warn"
+                        outline
+                        onClick={onSaveUpdate}
+                        onCancel={() => setOpenEdit(false)}
+                        >
+                            <ResourceEdit
+                                name={name}
+                                changeName={onChangeName}
+                                value={valueEntity}
+                                changeValue={onChangeValue}
+                                path={`http://localhost:7000/api/v0.1/`}
+                            
+                            />
+                    </ProjectsSettings>
+                </Modal>
                 <Modal isOpen={openRemove} setOpen={() => setOpenRemove(false)} missClose={false}>
                     <ProjectsSettings
                         action="удалить"

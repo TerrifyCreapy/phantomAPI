@@ -25,5 +25,11 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], CreateEntityDto.prototype, "link", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        default: '[]'
+    }),
+    __metadata("design:type", Object)
+], CreateEntityDto.prototype, "value", void 0);
 exports.CreateEntityDto = CreateEntityDto;
 //# sourceMappingURL=create-entity.dto.js.map

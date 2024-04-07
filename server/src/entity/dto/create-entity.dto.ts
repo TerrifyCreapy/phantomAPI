@@ -9,4 +9,8 @@ export class CreateEntityDto {
         default: "aw",
     })
     link: string;
+    @ApiProperty({
+        default: '[]'
+    })
+    value: string | Array<any>
 }

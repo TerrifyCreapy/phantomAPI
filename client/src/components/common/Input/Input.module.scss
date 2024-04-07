@@ -7,12 +7,21 @@ input {
     outline: none;
     border: none;
     border-radius: 15px;
-    padding: 10px 15px;
+    padding: 5px 15px;
     font-size: 16px;
     font-weight: bold;
-}
 
-.default {
-    background-color: var(--background);
-    color: var(--color);
+    &.default {
+        background-color: var(--background);
+        color: var(--color);
+    }
+
+    &.invisible {
+        background-color: transparent;
+        color: gray;
+
+        &:focus {
+            border: 1px solid blue;
+        }
+    }
 }
