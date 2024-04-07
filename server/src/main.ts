@@ -5,8 +5,16 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 
+import cors from "cors";
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: false });
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      credentials: true,
+      origin: true,
+      allowedHeaders: "*"
+    }
+  });
 
   const config = app.get(ConfigService);
 
@@ -15,11 +23,9 @@ async function bootstrap() {
 
   app.setGlobalPrefix(`${prefix}/${v}`);
 
-  
+
 
   const port: number = config.get<number>('port');
-
-  app.enableCors({ credentials: true, origin: true });
 
   const cfg = new DocumentBuilder()
     .setTitle('BaumanAPI documentation')

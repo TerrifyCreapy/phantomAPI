@@ -7,15 +7,16 @@ type ModalPropsType = {
     setOpen: Dispatch<SetStateAction<boolean>>;
     missClose?: boolean;
     maxWidth?: string; //maxWidth in vw
-    minHeight?: string;
+    maxMobile?: string;
 }
 
 const Modal: FC<ModalPropsType> = (
-    {children, isOpen, setOpen, missClose = true, maxWidth = "35", minHeight}
+    {children, isOpen, setOpen, missClose = true, maxWidth = "35", maxMobile = "75"}
 ) => {
 
     const style = {
         "--width": maxWidth + "vw",
+        "--mobile_width":  maxMobile + "vw",
     } as CSSProperties;
 
     function modalClose() {

@@ -6,10 +6,15 @@
     align-items: center;
     justify-content: space-between;
 
+    @media (max-width: 590px) {
+        flex-direction: column;
+    }
+
     &_path {
         display: flex;
         gap: calc(5px + 5 * (100vw / 850));
         padding: 1em 0 1.5em 0;
+        align-items: center;
 
         &_active {
             color: #000 !important;

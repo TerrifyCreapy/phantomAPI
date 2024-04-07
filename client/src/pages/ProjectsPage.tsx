@@ -16,6 +16,7 @@ import { createEntity, fetchProject, getData, removeEntity, updateEntity } from 
 import IProject from "interfaces/entities/IProject";
 import { resetError } from "stores/reducers/Project/ProjectSlice";
 import ResourceEdit from "components/ProjectSettings/ResourceEdit";
+import SettingsProject from "components/ProjectSettings/SettingsProject";
 
 type ProjectsContextType = {
     getProjects: () => unknown;
@@ -172,10 +173,10 @@ const ProjectsPage: FC = () => {
                 
             </Container> 
             <Portal id="root">
-                    <Modal isOpen={openModal} setOpen={setOpenModal}>
+                    <Modal isOpen={openModal} setOpen={setOpenModal} maxWidth="35">
                         <CreateProject/>
                     </Modal>
-                    <Modal isOpen={openResource} setOpen={() => setOpenResource(false)} maxWidth="50">
+                    <Modal isOpen={openResource} setOpen={() => setOpenResource(false)} maxWidth="50" maxMobile="200">
                         <ProjectsSettings
                             action="создать"
                             text=""
@@ -193,14 +194,14 @@ const ProjectsPage: FC = () => {
                         </ProjectsSettings>
                     </Modal>
                     <Modal isOpen={openSettings} setOpen={() => setOpenSettings(false)}>
-                    <ProjectsSettings
+                        <ProjectsSettings
                             action="сохранить"
-                            text="создание ресурса"
+                            text="настройка проекта"
                             color="success"
                             onClick={() => 1}
                             onCancel={() => setOpenSettings(false)}
                         >
-                            <span> Вы действительно хотите настроить проект?</span>
+                            <SettingsProject name={project?.name || ""} project={project as IProject}/>
                         </ProjectsSettings>
                     </Modal>
                     <Modal isOpen={openRemove} setOpen={() => setOpenRemove(false)} missClose={false}>

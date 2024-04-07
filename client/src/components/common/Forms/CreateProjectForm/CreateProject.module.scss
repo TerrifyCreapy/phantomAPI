@@ -6,6 +6,12 @@
 
     &__title {
         text-transform: capitalize;
+
+        @media (max-width: 1000px) {
+            text-align: center;
+            align-self: center;
+            text-wrap: balance;
+        }
     }
 
     &__error {
@@ -20,5 +26,9 @@
     &__buttons {
         display: flex;
         gap: 7%;
+
+        @media (max-width: 1000px) {
+            justify-content: center;
+        }
     }
 }

@@ -49,6 +49,7 @@ export const me = () => async (dispatch: AppDispatch) => {
 
 export const register = (email: string, password: string) => async (dispatch: AppDispatch) => {
     try {
+        console.log(email);
         dispatch(userSlice.actions.login());
         const response = await UserAPI.register(email, password);
         const user = setting(response);

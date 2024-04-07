@@ -15,5 +15,11 @@
         border: 2px solid rgb(137, 137, 223);
         max-width: var(--width);
         width: 100%;
+
+        @media (max-width: 500px) {
+            max-width: var(--mobile_width);
+            overflow-y: auto;
+
+        }
     }
 }

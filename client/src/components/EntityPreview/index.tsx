@@ -94,7 +94,7 @@ const EntityPreview: FC<EntityPreviewType> = ({
                 <Button icon={faTrash} outline color="warn" onClick={onOpenRemove}/>
             </div>
             <Portal id="root">
-                <Modal isOpen={openEdit} setOpen={() => setOpenEdit(false)} missClose={false}>
+                <Modal isOpen={openEdit} setOpen={() => setOpenEdit(false)} missClose={false} maxWidth="35" maxMobile="200">
                     <ProjectsSettings
                         action="сохранить"
                         text=""
@@ -113,7 +113,7 @@ const EntityPreview: FC<EntityPreviewType> = ({
                             />
                     </ProjectsSettings>
                 </Modal>
-                <Modal isOpen={openRemove} setOpen={() => setOpenRemove(false)} missClose={false}>
+                <Modal isOpen={openRemove} setOpen={() => setOpenRemove(false)} missClose={false} >
                     <ProjectsSettings
                         action="удалить"
                         text="удалить cущность?"
