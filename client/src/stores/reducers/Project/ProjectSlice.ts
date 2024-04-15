@@ -33,7 +33,18 @@ export const projectSlice = createSlice({
             state.isLoadingProject = false;
         },
 
-        setJsonSuccess(state, action: PayloadAction<string>) {
+        setJsonSuccess(state, action: PayloadAction<{id: number, count: number}>) {
+            console.log(action.payload, state.entityJson);
+            if(state.project && state.project.entities) state.project.entities.rows = state.project.entities.rows.map(e => {
+                if(e.id === action.payload.id) return {
+                    ...e,
+                    item_count: action.payload.count,
+                };
+                return e;
+            });
+            console.log(state.project?.entities.rows, "123");
+        },
+        setJSONNew(state, action: PayloadAction<string>) {
             state.entityJson = action.payload;
         },
         setRemoveEntitySuccess(state, action: PayloadAction<number>) {

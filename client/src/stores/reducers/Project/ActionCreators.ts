@@ -36,7 +36,7 @@ export const getData = (id: number) => async (dispatch: AppDispatch) => {
     try {
         dispatch(projectSlice.actions.setLoading(true));
         const response = await EntityAPI.getOne(id);
-        dispatch(projectSlice.actions.setJsonSuccess(response));
+        dispatch(projectSlice.actions.setJSONNew(response));
     }
     catch (e: any) {
 
@@ -48,7 +48,7 @@ export const updateEntity = (id: number, name: string, value: string) => async (
         dispatch(projectSlice.actions.setLoading(true));
         const response = await EntityAPI.update(id, name, value);
         if (response)
-            dispatch(projectSlice.actions.setJsonSuccess(value));
+            dispatch(projectSlice.actions.setJsonSuccess(response));
     }
     catch (e: any) {
 

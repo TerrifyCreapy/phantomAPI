@@ -10,7 +10,10 @@ export declare class EntityService {
     }>;
     findOne(id?: number, link?: string, name?: string): Promise<any>;
     create(createEntityDto: CreateEntityDto): Promise<any>;
-    update(id: number, updateEntityDto: UpdateEntityDto): Promise<boolean>;
+    update(id: number, updateEntityDto: UpdateEntityDto): Promise<{
+        id: number;
+        count: any;
+    }>;
     remove(id?: number): Promise<boolean>;
     removeByProject(link: string): Promise<boolean>;
     createQueryStr(id?: number, link?: string, name?: string): string;

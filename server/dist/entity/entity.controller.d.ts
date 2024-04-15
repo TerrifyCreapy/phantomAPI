@@ -10,6 +10,9 @@ export declare class EntityController {
     }>;
     findOne(id: number): Promise<any>;
     create(createEntityDto: CreateEntityDto): Promise<any>;
-    update(id: number, updateEntityDto: UpdateEntityDto): Promise<boolean>;
+    update(id: number, updateEntityDto: UpdateEntityDto): Promise<{
+        id: number;
+        count: any;
+    }>;
     remove(id: string): Promise<boolean>;
 }

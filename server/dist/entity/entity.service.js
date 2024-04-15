@@ -98,11 +98,13 @@ let EntityService = class EntityService {
             console.log(updateEntityDto.name, id);
             let query = ``;
             if (id)
-                query = `UPDATE entities SET value='${updateEntityDto.value}', name='${updateEntityDto.name}' where id=${id}`;
+                query = `UPDATE entities SET value='${updateEntityDto.value}', name='${updateEntityDto.name}' where id=${id} RETURNING jsonb_array_length(value) as count`;
             else if (updateEntityDto.link && updateEntityDto.name)
                 query = `UPDATE entities SET value='${updateEntityDto.value}', name='${updateEntityDto.name}' where projectlink=${updateEntityDto.link} and name=${updateEntityDto.name}`;
+            console.log(query);
             const result = await this.pg.query(query);
-            return true;
+            console.log(result.rows[0], id, "mama");
+            return { id, count: result.rows[0].count };
         }
         catch (e) {
             if (e.message === Errors_constants_1.Errors.badRequestException) {
@@ -114,7 +116,7 @@ let EntityService = class EntityService {
             if (e.message === "NOTARRAY") {
                 throw new common_1.BadRequestException("Data must be json array!");
             }
-            throw new common_1.InternalServerErrorException();
+            throw new common_1.InternalServerErrorException(e.message);
         }
     }
     async remove(id = -1) {
