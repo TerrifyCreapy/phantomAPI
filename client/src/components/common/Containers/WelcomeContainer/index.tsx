@@ -34,7 +34,7 @@ const WelcomeContainer: FC<WelcomeContainerType> = ({user}) => {
         <main className={styles.welcome}>
             <Container className={styles._container}>
                 <h1 className={styles.welcome__title}>
-                    BaumanAPI - сервис для генерации REST API
+                    MoklyAPI - сервис для генерации REST API
                 </h1>
                 <p className={styles.welcome__subtitle}>
                     Данный сервис предоставляет тестовый API для вашего проекта.

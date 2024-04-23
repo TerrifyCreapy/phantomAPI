@@ -18,7 +18,7 @@ async function bootstrap() {
     app.setGlobalPrefix(`${prefix}/${v}`);
     const port = config.get('port');
     const cfg = new swagger_1.DocumentBuilder()
-        .setTitle('BaumanAPI documentation')
+        .setTitle('MOKLY documentation')
         .setDescription('Данный сервис был разработан, как дипломный проект для кафедры ИУК5')
         .setVersion('0.0.1')
         .addTag('Backend')

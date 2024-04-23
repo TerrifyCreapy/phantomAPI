@@ -28,7 +28,7 @@ async function bootstrap() {
   const port: number = config.get<number>('port');
 
   const cfg = new DocumentBuilder()
-    .setTitle('BaumanAPI documentation')
+    .setTitle('MOKLY documentation')
     .setDescription(
       'Данный сервис был разработан, как дипломный проект для кафедры ИУК5',
     )

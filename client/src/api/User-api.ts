@@ -11,7 +11,7 @@ class UserAPI {
         }
         catch (e: any) {
             console.log(e.message);
-            return {} as IUserResponse;
+            return null;
         }
 
     }
@@ -31,10 +31,16 @@ class UserAPI {
     }
 
     public static async register(email: string, password: string) {
-        const response = await instance.post<IUserResponse>("/auth/register", {
-            email, password,
-        });
-        return response.data;
+        try {
+            const response = await instance.post<IUserResponse>("/auth/register", {
+                email, password,
+            });
+            return response.data;
+
+        }
+        catch (e) {
+            return null;
+        }
 
     }
 }
