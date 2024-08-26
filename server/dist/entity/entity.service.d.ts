@@ -12,5 +12,6 @@ export declare class EntityService {
     create(createEntityDto: CreateEntityDto): Promise<any>;
     update(id: number, updateEntityDto: UpdateEntityDto): Promise<boolean>;
     remove(id?: number): Promise<boolean>;
+    removeByProject(link: string): Promise<boolean>;
     createQueryStr(id?: number, link?: string, name?: string): string;
 }

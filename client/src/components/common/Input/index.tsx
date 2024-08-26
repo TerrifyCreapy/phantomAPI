@@ -4,6 +4,9 @@ import styles from "./Input.module.scss";
 
 function getVariant(variant?: string) {
     switch (variant) {
+        case "invisible": {
+            return styles.invisible;
+        }
         default: {
             return styles.default;
         }

@@ -39,11 +39,20 @@ let ProjectService = class ProjectService {
         }
     }
     async findOne(link) {
-        const query = `SELECT * FROM projects where "link"='${link}'`;
-        const result = await this.pg.query(query);
-        if (!result.rows.length)
-            throw new common_1.BadRequestException("Unknown link");
-        return Object.assign({}, result.rows[0]);
+        try {
+            const query = `SELECT * FROM projects where "link"='${link}'`;
+            const result = await this.pg.query(query);
+            if (!result.rows.length)
+                throw new Error("NOTFOUND");
+            console.log(result.rows[0], "result");
+            const entites = await this.entityService.findAll(link);
+            return Object.assign(Object.assign({}, result.rows[0]), { entities: entites });
+        }
+        catch (e) {
+            if (e.message === "NOTFOUND")
+                throw new common_1.NotFoundException("The project not found!");
+            throw new common_1.BadRequestException(e.message);
+        }
     }
     async create(createProjectDto, email) {
         try {
@@ -83,6 +92,7 @@ let ProjectService = class ProjectService {
                     const cfg = {
                         name: "users",
                         link,
+                        value: [],
                     };
                     await this.entityService.create(cfg);
                 }
@@ -92,6 +102,7 @@ let ProjectService = class ProjectService {
                     const cfg = {
                         name: "uploads",
                         link,
+                        value: [],
                     };
                     await this.entityService.create(cfg);
                 }
@@ -105,6 +116,7 @@ let ProjectService = class ProjectService {
         }
     }
     async remove(link) {
+        const removeEntity = await this.entityService.removeByProject(link);
         const query = `DELETE FROM projects WHERE link='${link}'`;
         const result = (await this.pg.query(query)).rowCount;
         if (!result)

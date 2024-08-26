@@ -22,7 +22,9 @@ export const login = (email: string, password: string) => async (dispatch: AppDi
     try {
         dispatch(userSlice.actions.login());
         const response = await UserAPI.login(email, password);
-
+        if (!response) {
+            return dispatch(userSlice.actions.loginError("error"));
+        }
         const user = setting(response);
 
         dispatch(userSlice.actions.loginSuccess(user));
@@ -49,8 +51,10 @@ export const me = () => async (dispatch: AppDispatch) => {
 
 export const register = (email: string, password: string) => async (dispatch: AppDispatch) => {
     try {
+        console.log(email);
         dispatch(userSlice.actions.login());
         const response = await UserAPI.register(email, password);
+        if (!response) return dispatch(userSlice.actions.loginError("Error"));
         const user = setting(response);
         dispatch(userSlice.actions.loginSuccess(user));
 

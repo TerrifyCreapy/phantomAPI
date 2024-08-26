@@ -16,11 +16,13 @@ export class AuthController {
   @Post('login')
   @ApiBody({ type: CreateUserDto })
   async login(@Req() req) {
+    console.log(123);
     return await this.authService.login(req.user);
   }
 
   @Post('register')
   async register(@Body() dto: CreateUserDto) {
+    console.log(dto);
     try {
       return await this.authService.register(dto);
     }

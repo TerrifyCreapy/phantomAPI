@@ -7,6 +7,8 @@ import styles from "./Header.module.scss";
 import HeaderButton from "./HeaderButton";
 
 import { ReactComponent as HomeIcon } from "../../assets/house-solid.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBook, faHouse } from "@fortawesome/free-solid-svg-icons";
 
 const Header: FC = () => {
 
@@ -25,8 +27,14 @@ const Header: FC = () => {
             <Container className={styles._container}>
                 <Logo />
                 <div className={styles.header__buttons}>
-                    <HeaderButton onClick={(event) => onHomeButton(event)} className={styles.header__button}><HomeIcon className={`${styles.button_icon} ${styles.button__home}`}/> Стартовая</HeaderButton>
-                    <HeaderButton onClick={(event) => onDocumentationButton(event)} className={styles.header__button}>Документация</HeaderButton>
+                    <HeaderButton onClick={(event) => onHomeButton(event)} className={styles.header__button}>
+                        <FontAwesomeIcon icon={faHouse}/>
+                        <span className={styles.header__button_text}>Домашняя</span>
+                    </HeaderButton>
+                    <HeaderButton onClick={(event) => onDocumentationButton(event)} className={styles.header__button}>
+                        <FontAwesomeIcon icon={faBook}/>
+                        <span className={styles.header__button_text}>Документация</span>
+                    </HeaderButton>
                 </div>
             </Container>
         </header>

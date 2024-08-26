@@ -1,0 +1,33 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .title {
+        &::first-letter {
+            text-transform: uppercase;
+        }
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        &__title {
+            font-weight: bold;
+        }
+
+        &__address {
+            font-weight: bold;
+            color: rgb(122, 122, 167);
+        }
+    }
+
+    .entities {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        position: relative;
+    }
+}

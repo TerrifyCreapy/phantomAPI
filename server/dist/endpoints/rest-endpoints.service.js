@@ -30,10 +30,8 @@ let RestEndpointsService = class RestEndpointsService {
     async findEndPoint(link, endpoint) {
         try {
             await this.checkProject(link);
-            const query = `SELECT json_array_elements(value) as items from entities where name='${endpoint}' and projectlink='${link}'`;
+            const query = `SELECT jsonb_array_elements(value) as items from entities where name='${endpoint}' and projectlink='${link}'`;
             const result = (await this.pg.query(query)).rows.map(e => (Object.assign({}, e.items)));
-            if (!result.length)
-                throw new Error(Errors_constants_1.Errors.notFoundException);
             return result;
         }
         catch (e) {
@@ -57,13 +55,14 @@ let RestEndpointsService = class RestEndpointsService {
     async createItem(link, endpoint, body) {
         try {
             (await this.checkProject(link));
-            const nextIndex = (await this.pg.query(`SELECT index FROM entities where projectlink='${link}' and name='${endpoint}'`)).rows[0].index;
-            body.id = nextIndex;
-            const query = `UPDATE entities SET value=array_append(value, '${JSON.stringify(body)}'::jsonb), index = index + 1 where projectlink='${link}' and name='${endpoint}' RETURNING *`;
+            let insertValue = `[${JSON.stringify(body)}]`;
+            console.log(insertValue);
+            const query = `UPDATE entities SET value=value || '${insertValue}' where projectlink='${link}' and name='${endpoint}' RETURNING *`;
             const isCompleted = Boolean((await this.pg.query(query)).rows.length);
             return body;
         }
         catch (e) {
+            throw new common_1.BadRequestException(e.message);
         }
     }
     async findUserByEmail(email) {

@@ -2,6 +2,7 @@ import IProjectsResponse from "interfaces/common/IProjectsResponse";
 import UserAPI from "./User-api";
 import instance from "./default";
 import IReduceProject from "interfaces/entities/IReducedProject";
+import IProject from "interfaces/entities/IProject";
 
 class ProjectsAPI {
 
@@ -16,6 +17,24 @@ class ProjectsAPI {
         }
 
         return true;
+    }
+
+    public static async getProject(link: string): Promise<IProject | string | undefined> {
+        try {
+            const auth = await this.checkTokens();
+
+            if (!auth) return;
+            const response = await instance.get<IProject>(`/project/${link}`, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+                }
+            });
+            return response.data;
+        }
+        catch (e: any) {
+            console.log("e", e.message);
+            return e.message;
+        }
     }
 
 
@@ -54,6 +73,22 @@ class ProjectsAPI {
             });
 
 
+            return response.data;
+        }
+        catch (e: any) {
+
+        }
+    }
+    public static async removeProject(link: string) {
+        try {
+            const auth = await this.checkTokens();
+
+            if (!auth) return;
+            const response = await instance.delete(`/project/${link}`, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+                }
+            });
             return response.data;
         }
         catch (e: any) {

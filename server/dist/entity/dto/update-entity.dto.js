@@ -16,6 +16,12 @@ class UpdateEntityDto extends (0, swagger_1.PartialType)(create_entity_dto_1.Cre
 }
 __decorate([
     (0, swagger_1.ApiProperty)({
+        default: "name"
+    }),
+    __metadata("design:type", String)
+], UpdateEntityDto.prototype, "name", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
         default: []
     }),
     __metadata("design:type", Object)

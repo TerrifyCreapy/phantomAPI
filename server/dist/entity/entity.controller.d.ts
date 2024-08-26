@@ -8,7 +8,7 @@ export declare class EntityController {
         rows: any;
         totalCount: any;
     }>;
-    findOne(id: string): Promise<any>;
+    findOne(id: number): Promise<any>;
     create(createEntityDto: CreateEntityDto): Promise<any>;
     update(id: number, updateEntityDto: UpdateEntityDto): Promise<boolean>;
     remove(id: string): Promise<boolean>;

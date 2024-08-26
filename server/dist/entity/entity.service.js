@@ -27,7 +27,7 @@ let EntityService = class EntityService {
             const project = (await this.pg.query('SELECT * FROM projects WHERE link=' + `'${link}'`)).rows.length;
             if (!project)
                 throw new Error(Errors_constants_1.Errors.notFoundException);
-            const query = `SELECT id, name FROM entities where "projectlink"='${link}'`;
+            const query = `select id, name, jsonb_array_length(value) as item_count from entities where projectlink='${link}' order by createdat asc;`;
             const queryCount = `SELECT count(*) FROM entities where "projectlink"='${link}'`;
             const result = (await this.pg.query(query)).rows;
             const totalCount = (await this.pg.query(queryCount)).rows[0].count;
@@ -45,12 +45,13 @@ let EntityService = class EntityService {
     }
     async findOne(id = -1, link = "", name = "") {
         try {
+            console.log(id);
             const resultStr = this.createQueryStr(id, link, name);
-            const query = `SELECT * from entities where ${resultStr}`;
+            const query = `SELECT value from entities where ${resultStr}`;
             const result = (await this.pg.query(query)).rows;
             if (!result.length)
                 return null;
-            return result[0];
+            return result[0].value;
         }
         catch (e) {
             throw new common_1.InternalServerErrorException();
@@ -58,7 +59,7 @@ let EntityService = class EntityService {
     }
     async create(createEntityDto) {
         try {
-            const { name, link } = createEntityDto;
+            const { name, link, value } = createEntityDto;
             const project = (await this.pg.query(`SELECT * FROM projects where "link"='${link}'`)).rows;
             if (!project.length)
                 throw new Error(Errors_constants_1.Errors.notFoundException);
@@ -68,8 +69,9 @@ let EntityService = class EntityService {
             const maxEntities = (await this.pg.query(`SELECT id FROM entities where "projectlink"='${link}'`)).rows.length;
             if (maxEntities > 19)
                 throw new Error(Errors_constants_1.Errors.badRequestException);
+            let arr = value ? typeof value === "string" ? value : JSON.stringify(value) : [];
             const query = `INSERT INTO entities(name, value, "projectlink") values($1, $2, $3) RETURNING *`;
-            const result = (await this.pg.query(query, [name, '[]', link])).rows[0];
+            const result = (await this.pg.query(query, [name, arr, link])).rows[0];
             return Object.assign({}, result);
         }
         catch (e) {
@@ -86,13 +88,19 @@ let EntityService = class EntityService {
         try {
             if (!id && (!updateEntityDto.link || !updateEntityDto.name))
                 throw new Error(Errors_constants_1.Errors.badRequestException);
-            if (!Array.isArray(updateEntityDto.value))
-                throw new Error("NOTARRAY");
+            if (typeof updateEntityDto.value === "string") {
+                if (!Array.isArray(JSON.parse(updateEntityDto.value)))
+                    throw new Error("Data must be an array!");
+            }
+            else if (!Array.isArray(updateEntityDto.value)) {
+                throw new Error("Data must be an array!");
+            }
+            console.log(updateEntityDto.name, id);
             let query = ``;
             if (id)
-                query = `UPDATE entities SET value='${updateEntityDto.value}' where id=${id}`;
+                query = `UPDATE entities SET value='${updateEntityDto.value}', name='${updateEntityDto.name}' where id=${id}`;
             else if (updateEntityDto.link && updateEntityDto.name)
-                query = `UPDATE entities SET value='${updateEntityDto.value}' where projectlink=${updateEntityDto.link} and name=${updateEntityDto.name}`;
+                query = `UPDATE entities SET value='${updateEntityDto.value}', name='${updateEntityDto.name}' where projectlink=${updateEntityDto.link} and name=${updateEntityDto.name}`;
             const result = await this.pg.query(query);
             return true;
         }
@@ -120,6 +128,21 @@ let EntityService = class EntityService {
         catch (e) {
             if (e.message === Errors_constants_1.Errors.notFoundException) {
                 throw new common_1.NotFoundException("Entity not found");
+            }
+            throw new common_1.InternalServerErrorException();
+        }
+    }
+    async removeByProject(link) {
+        try {
+            if (!link)
+                throw new Error(Errors_constants_1.Errors.badRequestException);
+            const query = `DELETE FROM entities WHERE projectlink='${link}'`;
+            const response = await this.pg.query(query);
+            return true;
+        }
+        catch (e) {
+            if (e.massage = Errors_constants_1.Errors.badRequestException) {
+                throw new common_1.BadRequestException(e.message);
             }
             throw new common_1.InternalServerErrorException();
         }

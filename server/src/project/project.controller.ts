@@ -12,9 +12,9 @@ import { IProject } from './entities/project.entity';
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(private readonly projectService: ProjectService) { }
 
-  
+
   @Get()
   async findAll(@UserEmail() email: string) {
     return (await this.projectService.findAll(email));
@@ -22,7 +22,9 @@ export class ProjectController {
 
   @Get(':link')
   async findOne(@Param('link') link: string): Promise<IProject | null> {
-    return (await this.projectService.findOne(link));
+    const response = await this.projectService.findOne(link);
+    console.log(response);
+    return (response);
   }
 
   @Post()
@@ -33,12 +35,12 @@ export class ProjectController {
 
   @Patch(':link')
   async update(@Param('link') link: string, updateDto: CreateProjectDto) {
-    return(await this.projectService.update(link, updateDto))
+    return (await this.projectService.update(link, updateDto))
   }
 
   @Patch('features/:link')
   async updateFeatures(@Param('link') link: string, @Body() updateProjectDto: UpdateProjectDto) {
-    return (await this.projectService.updateFeatures(link ,updateProjectDto));
+    return (await this.projectService.updateFeatures(link, updateProjectDto));
   }
 
   @Delete(':link')

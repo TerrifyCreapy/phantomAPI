@@ -7,7 +7,6 @@ export class SubdomainMiddleware implements NestMiddleware {
     use(req: Request, res: Response, next: NextFunction) {
         const hostname = req.hostname;
         const subdomain = hostname.split('.')[0];
-        console.log(subdomain);
         req.headers.subdomain = subdomain;
         next();
     }

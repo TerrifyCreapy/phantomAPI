@@ -3,10 +3,17 @@ import instance from "./default";
 
 class UserAPI {
     public static async login(email: string, password: string) {
-        const response = await instance.post<IUserResponse>("/auth/login", {
-            email, password,
-        });
-        return response.data;
+        try {
+            const response = await instance.post<IUserResponse>("/auth/login", {
+                email, password,
+            });
+            return response.data;
+        }
+        catch (e: any) {
+            console.log(e.message);
+            return null;
+        }
+
     }
     public static async me() {
         try {
@@ -18,16 +25,22 @@ class UserAPI {
             return response.data;
         }
         catch (e: any) {
-            console.log(e.response.data);
+            console.log(e.message);
         }
 
     }
 
     public static async register(email: string, password: string) {
-        const response = await instance.post<IUserResponse>("/auth/register", {
-            email, password,
-        });
-        return response.data;
+        try {
+            const response = await instance.post<IUserResponse>("/auth/register", {
+                email, password,
+            });
+            return response.data;
+
+        }
+        catch (e) {
+            return null;
+        }
 
     }
 }

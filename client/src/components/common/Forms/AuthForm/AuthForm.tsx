@@ -64,9 +64,7 @@ const AuthForm: FC = () => {
             }
             {isDisabled()? <span>Пароли не совпадают</span>: null}
             <div className={styles.auth__buttons}>
-                <Button type="submit" className={styles.auth__buttons_sign} disabled={isDisabled()}>
-                    {isAuth?"Зарегистрироваться": "Войти"}
-                </Button>
+                <Button type="submit" className={styles.auth__buttons_sign} disabled={isDisabled()} text={isAuth?"Зарегистрироваться": "Войти"}/>
                 <span className={styles.auth__buttons_change} onClick={() => changeAuth()}>
                     {isAuth? "Авторизация": "Регистрация"}
                 </span>

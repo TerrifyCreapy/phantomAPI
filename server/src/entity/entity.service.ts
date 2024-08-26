@@ -16,7 +16,7 @@ export class EntityService {
 
       const project = (await this.pg.query('SELECT * FROM projects WHERE link=' + `'${link}'`)).rows.length;
       if (!project) throw new Error(Errors.notFoundException);
-      const query = `SELECT id, name FROM entities where "projectlink"='${link}'`;
+      const query = `select id, name, jsonb_array_length(value) as item_count from entities where projectlink='${link}' order by createdat asc;`;
       const queryCount = `SELECT count(*) FROM entities where "projectlink"='${link}'`;
       const result = (await this.pg.query(query)).rows;
       const totalCount = (await this.pg.query(queryCount)).rows[0].count;
@@ -38,17 +38,17 @@ export class EntityService {
 
   async findOne(id: number = -1, link: string = "", name: string = "") {
     try {
-
+      console.log(id);
       const resultStr = this.createQueryStr(id, link, name);
 
 
-      const query = `SELECT * from entities where ${resultStr}`;
+      const query = `SELECT value from entities where ${resultStr}`;
 
       const result = (await this.pg.query(query)).rows;
 
 
       if (!result.length) return null;
-      return result[0];
+      return result[0].value;
 
     }
     catch (e: any) {
@@ -58,7 +58,7 @@ export class EntityService {
 
   async create(createEntityDto: CreateEntityDto) {
     try {
-      const { name, link } = createEntityDto;
+      const { name, link, value } = createEntityDto;
 
 
       const project = (await this.pg.query(`SELECT * FROM projects where "link"='${link}'`)).rows;
@@ -70,9 +70,10 @@ export class EntityService {
       const maxEntities = (await this.pg.query(`SELECT id FROM entities where "projectlink"='${link}'`)).rows.length;
       if (maxEntities > 19) throw new Error(Errors.badRequestException);
 
+      let arr = value ? typeof value === "string" ? value : JSON.stringify(value) : [];
 
       const query = `INSERT INTO entities(name, value, "projectlink") values($1, $2, $3) RETURNING *`;
-      const result = (await this.pg.query(query, [name, '[]', link])).rows[0];
+      const result = (await this.pg.query(query, [name, arr, link])).rows[0];
 
       return { ...result };
 
@@ -91,10 +92,19 @@ export class EntityService {
   async update(id: number = -1, updateEntityDto: UpdateEntityDto) {
     try {
       if (!id && (!updateEntityDto.link || !updateEntityDto.name)) throw new Error(Errors.badRequestException);
-      if (!Array.isArray(updateEntityDto.value)) throw new Error("NOTARRAY");
+
+
+      if (typeof updateEntityDto.value === "string") {
+        if (!Array.isArray(JSON.parse(updateEntityDto.value))) throw new Error("Data must be an array!");
+      }
+      else if (!Array.isArray(updateEntityDto.value)) {
+        throw new Error("Data must be an array!");
+      }
+
+      console.log(updateEntityDto.name, id);
       let query = ``;
-      if (id) query = `UPDATE entities SET value='${updateEntityDto.value}' where id=${id}`;
-      else if (updateEntityDto.link && updateEntityDto.name) query = `UPDATE entities SET value='${updateEntityDto.value}' where projectlink=${updateEntityDto.link} and name=${updateEntityDto.name}`;
+      if (id) query = `UPDATE entities SET value='${updateEntityDto.value}', name='${updateEntityDto.name}' where id=${id}`;
+      else if (updateEntityDto.link && updateEntityDto.name) query = `UPDATE entities SET value='${updateEntityDto.value}', name='${updateEntityDto.name}' where projectlink=${updateEntityDto.link} and name=${updateEntityDto.name}`;
       const result = await this.pg.query(query);
       return true;
     }
@@ -126,8 +136,21 @@ export class EntityService {
       }
       throw new InternalServerErrorException();
     }
+  }
 
-
+  async removeByProject(link: string) {
+    try {
+      if (!link) throw new Error(Errors.badRequestException);
+      const query = `DELETE FROM entities WHERE projectlink='${link}'`;
+      const response = await this.pg.query(query);
+      return true;
+    }
+    catch (e: any) {
+      if (e.massage = Errors.badRequestException) {
+        throw new BadRequestException(e.message);
+      }
+      throw new InternalServerErrorException();
+    }
   }
 
 

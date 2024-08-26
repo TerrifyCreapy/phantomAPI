@@ -8,9 +8,9 @@ import styles from "./Logo.module.scss";
 const Logo: FC = () => {
     return (
         <fieldset className={styles.logo}>
-            <legend>BaumanApi logotype</legend>
+            <legend>MoklyAPI logotype</legend>
             <NavLink to={Routes.MAIN_PATH} className={styles.logo__link}>
-                BaumanAPI
+                MoklyAPI
             </NavLink>
         </fieldset>
     );

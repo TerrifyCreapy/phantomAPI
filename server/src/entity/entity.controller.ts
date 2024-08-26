@@ -11,15 +11,16 @@ import { UserEmail } from 'src/decorators/user-email.decorator';
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 export class EntityController {
-  constructor(private readonly entityService: EntityService) {}
+  constructor(private readonly entityService: EntityService) { }
 
   @Get(':link')
   findAll(@Param('link') link: string) {
+    console.log(1);
     return this.entityService.findAll(link);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get('one/:id')
+  findOne(@Param('id') id: number) {
     console.log("Next");
     return this.entityService.findOne(+id);
   }

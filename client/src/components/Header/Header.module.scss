@@ -14,7 +14,7 @@
 
     &__buttons {
         display: flex;
-        gap: 2em;
+        gap: .5em;
     }
 
     &__button {
@@ -29,6 +29,14 @@
         padding: 5px 10px;
         border-radius: 10px;
         transition: all .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+        &_text {
+
+
+            @media (max-width: 500px) {
+                display: none;
+            }
+        }
 
         &:hover {
             background-color: rgb(255, 255, 255);

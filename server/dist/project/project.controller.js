@@ -28,7 +28,9 @@ let ProjectController = class ProjectController {
         return (await this.projectService.findAll(email));
     }
     async findOne(link) {
-        return (await this.projectService.findOne(link));
+        const response = await this.projectService.findOne(link);
+        console.log(response);
+        return (response);
     }
     async createProject(dto, email) {
         return (await this.projectService.create(dto, email));
